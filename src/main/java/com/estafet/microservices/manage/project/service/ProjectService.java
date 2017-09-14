@@ -8,14 +8,15 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.estafet.microservices.manage.project.messages.ProjectDetails;
 import com.estafet.microservices.manage.project.model.Project;
 import com.estafet.microservices.manage.project.model.Sprint;
-import com.estafet.microservices.manage.project.service.messages.ProjectDetails;
+import com.estafet.microservices.manage.project.model.Story;
 
+@SuppressWarnings({ "unchecked", "rawtypes" })
 @Service
 public class ProjectService {
 
-	@SuppressWarnings("unchecked")
 	public List<Project> getProjects() {
 		RestTemplate template = new RestTemplate();
 		return template.getForObject("http://localhost:8080/sprint-repository/projects",
@@ -50,6 +51,14 @@ public class ProjectService {
 
 	public List<Sprint> getProjectSprints(int projectId) {
 		return getProject(projectId).getSprints();
+	}
+	
+	public List<Story> getProjectStories(int projectId) {
+		RestTemplate template = new RestTemplate();
+		Map<String, Integer> params = new HashMap<String, Integer>();
+		params.put("id", projectId);
+		return template.getForObject("http://localhost:8080/story-repository/stories?projectId={id}",
+				new ArrayList().getClass(), params);
 	}
 
 }

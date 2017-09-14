@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.estafet.microservices.manage.project.messages.ProjectDetails;
 import com.estafet.microservices.manage.project.model.Project;
 import com.estafet.microservices.manage.project.service.ProjectService;
-import com.estafet.microservices.manage.project.service.messages.ProjectDetails;
 
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
