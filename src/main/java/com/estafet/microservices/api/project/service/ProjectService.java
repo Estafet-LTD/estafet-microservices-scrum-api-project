@@ -1,4 +1,4 @@
-package com.estafet.microservices.manage.project.service;
+package com.estafet.microservices.api.project.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,10 +8,12 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.estafet.microservices.manage.project.messages.ProjectDetails;
-import com.estafet.microservices.manage.project.model.Project;
-import com.estafet.microservices.manage.project.model.Sprint;
-import com.estafet.microservices.manage.project.model.Story;
+import com.estafet.microservices.api.project.messages.ProjectDetails;
+import com.estafet.microservices.api.project.model.Project;
+import com.estafet.microservices.api.project.model.Sprint;
+import com.estafet.microservices.api.project.model.Story;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SuppressWarnings({ "unchecked", "rawtypes" })
 @Service
@@ -19,8 +21,16 @@ public class ProjectService {
 
 	public List<Project> getProjects() {
 		RestTemplate template = new RestTemplate();
-		return template.getForObject("http://localhost:8080/sprint-repository/projects",
-				new ArrayList<Project>().getClass());
+		List objects = template.getForObject("http://localhost:8080/sprint-repository/projects",
+				List.class);
+		List<Project> projects = new ArrayList<Project>();
+		ObjectMapper mapper = new ObjectMapper();
+		for (Object object : objects) {
+			Project project = mapper.convertValue(object, new TypeReference<Project>() {
+			});
+			projects.add(project);
+		}
+		return projects;
 	}
 
 	public Project getProject(int projectId) {

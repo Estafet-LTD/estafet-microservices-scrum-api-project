@@ -1,4 +1,4 @@
-package com.estafet.microservices.manage.project.model;
+package com.estafet.microservices.api.project.model;
 
 public class Story {
 

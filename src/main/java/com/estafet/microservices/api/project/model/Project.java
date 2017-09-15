@@ -1,4 +1,4 @@
-package com.estafet.microservices.manage.project.model;
+package com.estafet.microservices.api.project.model;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.estafet.microservices.manage.project.messages;
+package com.estafet.microservices.api.project.messages;
 
 public class ProjectDetails {
 
