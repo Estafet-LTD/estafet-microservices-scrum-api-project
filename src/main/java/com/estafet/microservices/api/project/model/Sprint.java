@@ -10,6 +10,12 @@ public class Sprint {
 
 	private Integer number;
 
+	private String status;
+
+	public String getStatus() {
+		return status;
+	}
+
 	public Integer getId() {
 		return id;
 	}
