@@ -1,2 +1,3 @@
-export PROJECT_REPOSITORY_JDBC_URL=jdbc:postgresql://localhost:5432/project-repository
-export STORY_REPOSITORY_JDBC_URL=jdbc:postgresql://localhost:5432/story-repository
+export STORY_REPOSITORY_SERVICE_URI=http://localhost:8080/story-repository
+export PROJECT_REPOSITORY_SERVICE_URI=http://localhost:8080/project-repository
+

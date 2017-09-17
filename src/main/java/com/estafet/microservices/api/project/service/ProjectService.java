@@ -21,7 +21,7 @@ public class ProjectService {
 
 	public List<Project> getProjects() {
 		RestTemplate template = new RestTemplate();
-		List objects = template.getForObject(System.getenv("PROJECT_REPOSITORY_JDBC_URL") + "/projects", List.class);
+		List objects = template.getForObject(System.getenv("PROJECT_REPOSITORY_SERVICE_URI") + "/projects", List.class);
 		List<Project> projects = new ArrayList<Project>();
 		ObjectMapper mapper = new ObjectMapper();
 		for (Object object : objects) {
@@ -36,13 +36,13 @@ public class ProjectService {
 		RestTemplate template = new RestTemplate();
 		Map<String, Integer> params = new HashMap<String, Integer>();
 		params.put("id", projectId);
-		return template.getForObject(System.getenv("PROJECT_REPOSITORY_JDBC_URL") + "/project/{id}", Project.class,
+		return template.getForObject(System.getenv("PROJECT_REPOSITORY_SERVICE_URI") + "/project/{id}", Project.class,
 				params);
 	}
 
 	public Project createProject(ProjectDetails message) {
 		RestTemplate template = new RestTemplate();
-		return template.postForObject(System.getenv("PROJECT_REPOSITORY_JDBC_URL") + "/project", message,
+		return template.postForObject(System.getenv("PROJECT_REPOSITORY_SERVICE_URI") + "/project", message,
 				Project.class);
 	}
 
@@ -50,14 +50,14 @@ public class ProjectService {
 		RestTemplate template = new RestTemplate();
 		Map<String, Integer> params = new HashMap<String, Integer>();
 		params.put("id", projectId);
-		template.put(System.getenv("PROJECT_REPOSITORY_JDBC_URL") + "/project/{id}", message, params);
+		template.put(System.getenv("PROJECT_REPOSITORY_SERVICE_URI") + "/project/{id}", message, params);
 	}
 
 	public void deleteProject(int projectId) {
 		RestTemplate template = new RestTemplate();
 		Map<String, Integer> params = new HashMap<String, Integer>();
 		params.put("id", projectId);
-		template.delete(System.getenv("PROJECT_REPOSITORY_JDBC_URL") + "/project/{id}", params);
+		template.delete(System.getenv("PROJECT_REPOSITORY_SERVICE_URI") + "/project/{id}", params);
 	}
 
 	public List<Sprint> getProjectSprints(int projectId) {
@@ -68,7 +68,7 @@ public class ProjectService {
 		RestTemplate template = new RestTemplate();
 		Map<String, Integer> params = new HashMap<String, Integer>();
 		params.put("id", projectId);
-		return template.getForObject(System.getenv("STORY_REPOSITORY_JDBC_URL") + "/stories?projectId={id}",
+		return template.getForObject(System.getenv("STORY_REPOSITORY_SERVICE_URI") + "/stories?projectId={id}",
 				new ArrayList().getClass(), params);
 	}
 
