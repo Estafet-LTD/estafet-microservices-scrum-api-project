@@ -1,8 +1,5 @@
 package com.estafet.microservices.api.project.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -24,18 +21,12 @@ public class Project {
 	@Column(name = "TITLE", nullable = false)
 	private String title;
 
-	private List<Sprint> sprints = new ArrayList<Sprint>();
-
 	public int getId() {
 		return id;
 	}
 
 	public String getTitle() {
 		return title;
-	}
-
-	public List<Sprint> getSprints() {
-		return sprints;
 	}
 
 	public Project setTitle(String title) {

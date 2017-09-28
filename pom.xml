@@ -4,7 +4,7 @@
   <artifactId>estafet-microservices-scrum-api-project</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>war</packaging>
-  	<dependencies>
+	<dependencies>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
@@ -55,6 +55,12 @@
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<version>9.4-1206-jdbc42</version>
-		</dependency>	
-	</dependencies>
+		</dependency>			
+	</dependencies>  
+	
+ 	<properties>
+    	<maven.compiler.source>1.8</maven.compiler.source>
+    	<maven.compiler.target>1.8</maven.compiler.target>
+  	</properties>
+	
 </project>
