@@ -1,3 +1,6 @@
+#!/bin/bash
+# Sets environment variables
+
 export PROJECT_API_SERVICE_URI=http://localhost:8080/project-api
 
 export JBOSS_A_MQ_BROKER_URL=tcp://localhost:61616
