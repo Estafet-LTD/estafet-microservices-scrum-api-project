@@ -5,8 +5,10 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.estafet.microservices.api.project.jms.NewProjectProducer;
 import com.estafet.microservices.api.project.model.Project;
 
 
@@ -15,6 +17,9 @@ public class ProjectDAO {
 
 	@PersistenceContext
 	private EntityManager entityManager;
+	
+	@Autowired
+	private NewProjectProducer newProjectProducer;
 	
 	public Project getProject(int projectId) {
 		return entityManager.find(Project.class, new Integer(projectId));
@@ -37,6 +42,7 @@ public class ProjectDAO {
 	
 	public Project createProject(Project project) {
 		entityManager.persist(project);
+		newProjectProducer.sendMessage(project);
 		return project;
 	}
 	
