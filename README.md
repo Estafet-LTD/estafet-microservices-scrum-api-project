@@ -15,6 +15,7 @@ The project JSON object
     "id": 1,
     "title": "A fresh project"
 }
+```
 
 To retrieve an example the project object (useful for testing to see the microservice is online).
 
@@ -55,7 +56,6 @@ To delete a project with id = 1
 ```
 DELETE http://project-api/project/1
 ```
-
 
 ## Environment Variables
 ```
