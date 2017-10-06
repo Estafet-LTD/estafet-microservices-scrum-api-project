@@ -8,6 +8,14 @@ Each microservice has it's own git repository, but there is a master git reposit
 You can find a detailed explanation of how to install this (and other microservices) [here](https://github.com/Estafet-LTD/estafet-microservices-scrum#getting-started).
 ## API Interface
 
+The project JSON object
+
+```json
+{
+    "id": 1,
+    "title": "A fresh project"
+}
+
 To retrieve an example the project object (useful for testing to see the microservice is online).
 
 ```
@@ -51,12 +59,12 @@ DELETE http://project-api/project/1
 
 ## Environment Variables
 ```
-export JBOSS_A_MQ_BROKER_URL=tcp://localhost:61616
-export JBOSS_A_MQ_BROKER_USER=estafet
-export JBOSS_A_MQ_BROKER_PASSWORD=estafet
+JBOSS_A_MQ_BROKER_URL=tcp://localhost:61616
+JBOSS_A_MQ_BROKER_USER=estafet
+JBOSS_A_MQ_BROKER_PASSWORD=estafet
 
-export PROJECT_API_JDBC_URL=jdbc:postgresql://localhost:5432/project-api
-export PROJECT_API_DB_USER=postgres
-export PROJECT_API_DB_PASSWORD=welcome1
+PROJECT_API_JDBC_URL=jdbc:postgresql://localhost:5432/project-api
+PROJECT_API_DB_USER=postgres
+PROJECT_API_DB_PASSWORD=welcome1
 ```
 
