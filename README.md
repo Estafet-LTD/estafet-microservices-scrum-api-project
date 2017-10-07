@@ -10,9 +10,9 @@ You can find a detailed explanation of how to install this (and other microservi
 
 The project microservice publishes the following events.
 
-|Event   |Topic    |Message Type |
+|Topic   |Event    |Message Type |
 |--------|---------|-------------|
-|New Project|new.project.topic|Project|
+|new.project.topic|When a new project is created it is published to this topic|Project JSON Object|
 
 The project JSON object
 
