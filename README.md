@@ -8,6 +8,12 @@ Each microservice has it's own git repository, but there is a master git reposit
 You can find a detailed explanation of how to install this (and other microservices) [here](https://github.com/Estafet-LTD/estafet-microservices-scrum#getting-started).
 ## API Interface
 
+The project microservice publishes the following events.
+
+|Event   |Topic    |Message Type |
+|--------|---------|-------------|
+|New Project|new.project.topic|Project|
+
 The project JSON object
 
 ```json
