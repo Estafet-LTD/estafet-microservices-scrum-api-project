@@ -17,7 +17,6 @@ import com.estafet.microservices.api.project.messages.ProjectDetails;
 import com.estafet.microservices.api.project.model.Project;
 import com.estafet.microservices.api.project.service.ProjectService;
 
-
 @SuppressWarnings({ "rawtypes", "unchecked" })
 @RestController
 public class ProjectController {
