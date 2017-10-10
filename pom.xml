@@ -40,7 +40,22 @@
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-		</dependency>			
+		</dependency>	
+		<dependency>
+  			<groupId>io.opentracing.contrib</groupId>
+  			<artifactId>opentracing-spring-web-autoconfigure</artifactId>
+  			<version>0.0.10</version>
+		</dependency>
+		<!-- <dependency>
+  			<groupId>io.opentracing.contrib</groupId>
+  			<artifactId>opentracing-spring-cloud-starter</artifactId>
+  			 <version>0.0.4</version>
+		</dependency> -->	
+		<dependency>
+			<groupId>com.uber.jaeger</groupId>
+			<artifactId>jaeger-core</artifactId>
+			<version>0.21.0</version>
+		</dependency>
 	</dependencies>  
  	<properties>
     	<maven.compiler.source>1.8</maven.compiler.source>

@@ -19,6 +19,10 @@ import org.springframework.jms.support.converter.MessageConverter;
 import org.springframework.jms.support.converter.MessageType;
 import org.springframework.util.ErrorHandler;
 
+import com.uber.jaeger.samplers.ProbabilisticSampler;
+
+import io.opentracing.Tracer;
+
 @Configuration
 @ComponentScan
 @EnableAutoConfiguration
@@ -26,39 +30,45 @@ import org.springframework.util.ErrorHandler;
 @EnableJms
 public class Application extends SpringBootServletInitializer {
 
-    public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
-    }
+	public static void main(String[] args) {
+		SpringApplication.run(Application.class, args);
+	}
 
-    @Override
-    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        return application.sources(Application.class);
-    }
-    
-    @Bean
-    public JmsListenerContainerFactory<?> myFactory(ConnectionFactory connectionFactory,
-                                                    DefaultJmsListenerContainerFactoryConfigurer configurer) {
-        DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
-        // anonymous class
-        factory.setErrorHandler(
-            new ErrorHandler() {
-              @Override
-              public void handleError(Throwable t) {
-                System.err.println("An error has occurred in the transaction");
-              }
-            });
-        // lambda function
-        factory.setErrorHandler(t -> System.err.println("An error has occurred in the transaction"));
-        configurer.configure(factory, connectionFactory);
-        factory.setPubSubDomain(true);
-        return factory;
-    }
+	@Override
+	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+		return application.sources(Application.class);
+	}
+	
+	@Bean
+	public Tracer jaegerTracer() {
+		return new com.uber.jaeger.Configuration("project-api",
+				new com.uber.jaeger.Configuration.SamplerConfiguration(ProbabilisticSampler.TYPE, 1),
+				new com.uber.jaeger.Configuration.ReporterConfiguration()).getTracer();
+	}
 
-    @Bean
-    public MessageConverter jacksonJmsMessageConverter() {
-        MappingJackson2MessageConverter converter = new MappingJackson2MessageConverter();
-        converter.setTargetType(MessageType.TEXT);
-        converter.setTypeIdPropertyName("_type");
-        return converter;
-    }
+	@Bean
+	public JmsListenerContainerFactory<?> myFactory(ConnectionFactory connectionFactory,
+			DefaultJmsListenerContainerFactoryConfigurer configurer) {
+		DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
+		// anonymous class
+		factory.setErrorHandler(new ErrorHandler() {
+			@Override
+			public void handleError(Throwable t) {
+				System.err.println("An error has occurred in the transaction");
+			}
+		});
+		// lambda function
+		factory.setErrorHandler(t -> System.err.println("An error has occurred in the transaction"));
+		configurer.configure(factory, connectionFactory);
+		factory.setPubSubDomain(true);
+		return factory;
+	}
+
+	@Bean
+	public MessageConverter jacksonJmsMessageConverter() {
+		MappingJackson2MessageConverter converter = new MappingJackson2MessageConverter();
+		converter.setTargetType(MessageType.TEXT);
+		converter.setTypeIdPropertyName("_type");
+		return converter;
+	}
 }
