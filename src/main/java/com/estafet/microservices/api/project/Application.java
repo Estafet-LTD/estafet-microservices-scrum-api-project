@@ -19,10 +19,6 @@ import org.springframework.jms.support.converter.MessageConverter;
 import org.springframework.jms.support.converter.MessageType;
 import org.springframework.util.ErrorHandler;
 
-import com.uber.jaeger.samplers.ProbabilisticSampler;
-
-import io.opentracing.Tracer;
-
 @Configuration
 @ComponentScan
 @EnableAutoConfiguration
@@ -38,12 +34,12 @@ public class Application extends SpringBootServletInitializer {
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
 		return application.sources(Application.class);
 	}
-	
+
 	@Bean
-	public Tracer jaegerTracer() {
+	public io.opentracing.Tracer jaegerTracer() {
 		return new com.uber.jaeger.Configuration("project-api",
-				new com.uber.jaeger.Configuration.SamplerConfiguration(ProbabilisticSampler.TYPE, 1),
-				new com.uber.jaeger.Configuration.ReporterConfiguration()).getTracer();
+				com.uber.jaeger.Configuration.SamplerConfiguration.fromEnv(),
+				com.uber.jaeger.Configuration.ReporterConfiguration.fromEnv()).getTracer();
 	}
 
 	@Bean
