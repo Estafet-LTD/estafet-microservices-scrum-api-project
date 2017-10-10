@@ -12,7 +12,7 @@ public class NewProjectProducer {
 	@Autowired 
 	private JmsTemplate jmsTemplate;
 	
-	public void sendMessage(final Project project) {
+	public void sendMessage(Project project) {
 		jmsTemplate.convertAndSend("new.project.topic", project);
 	}
 }
