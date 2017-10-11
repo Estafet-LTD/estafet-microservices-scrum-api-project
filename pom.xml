@@ -47,7 +47,7 @@
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 		</dependency>
-<!-- 		<dependency>
+		<dependency>
 			<groupId>io.opentracing.contrib</groupId>
 			<artifactId>opentracing-spring-web-autoconfigure</artifactId>
 			<version>0.0.10</version>
@@ -62,7 +62,7 @@
 			<artifactId>brave-opentracing</artifactId>
 			<version>0.22.1</version>
 		</dependency>
-		<dependency>
+		<!-- <dependency>
 			<groupId>io.opentracing.contrib</groupId>
 			<artifactId>opentracing-spring-cloud-starter</artifactId>
 			<version>0.0.4</version>
