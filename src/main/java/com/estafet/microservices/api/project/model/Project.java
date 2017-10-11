@@ -1,7 +1,5 @@
 package com.estafet.microservices.api.project.model;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,14 +8,12 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 @Entity
 @Table(name = "PROJECT")
-public class Project implements Serializable {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 6979565319684514092L;
+public class Project {
 
 	@Id
 	@SequenceGenerator(name = "PROJECT_ID_SEQ", sequenceName = "PROJECT_ID_SEQ", allocationSize = 1)
@@ -39,6 +35,14 @@ public class Project implements Serializable {
 	public Project setTitle(String title) {
 		this.title = title;
 		return this;
+	}
+	
+	public String toJSON() {
+		try {
+			return new ObjectMapper().writeValueAsString(this);
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 }

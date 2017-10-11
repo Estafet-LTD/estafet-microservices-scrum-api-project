@@ -13,6 +13,6 @@ public class NewProjectProducer {
 	private JmsTemplate jmsTemplate;
 	
 	public void sendMessage(Project project) {
-		jmsTemplate.convertAndSend("new.project.topic", project);
+		jmsTemplate.convertAndSend("new.project.topic", project.toJSON());
 	}
 }
