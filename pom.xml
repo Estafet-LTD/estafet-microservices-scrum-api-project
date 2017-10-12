@@ -10,7 +10,7 @@
 		<version>1.5.7.RELEASE</version>
 		<relativePath />
 	</parent>
-<!-- 	<dependencyManagement>
+	<dependencyManagement>
 		<dependencies>
 			<dependency>
 				<groupId>org.springframework.cloud</groupId>
@@ -20,7 +20,7 @@
 				<scope>import</scope>
 			</dependency>
 		</dependencies>
-	</dependencyManagement> -->
+	</dependencyManagement>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -62,7 +62,7 @@
 			<artifactId>brave-opentracing</artifactId>
 			<version>0.22.1</version>
 		</dependency>
-		<!-- <dependency>
+		<dependency>
 			<groupId>io.opentracing.contrib</groupId>
 			<artifactId>opentracing-spring-cloud-starter</artifactId>
 			<version>0.0.4</version>
@@ -78,7 +78,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-websocket</artifactId>
-		</dependency> -->
+		</dependency>	
 	</dependencies>
 
 	<properties>

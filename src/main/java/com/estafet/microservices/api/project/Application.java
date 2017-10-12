@@ -24,7 +24,7 @@ public class Application extends SpringBootServletInitializer {
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
 	}
-
+	
 	@Bean
 	public io.opentracing.Tracer jaegerTracer() {
 		return new com.uber.jaeger.Configuration("project-api",
@@ -36,8 +36,8 @@ public class Application extends SpringBootServletInitializer {
 	public JmsListenerContainerFactory<?> myFactory(ConnectionFactory connectionFactory,
 			DefaultJmsListenerContainerFactoryConfigurer configurer) {
 		DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
+		//factory.setPubSubDomain(true);
 		configurer.configure(factory, connectionFactory);
-		factory.setPubSubDomain(true);
 		return factory;
 	}
 

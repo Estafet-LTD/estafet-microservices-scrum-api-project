@@ -8,11 +8,12 @@ import com.estafet.microservices.api.project.model.Project;
 
 @Component
 public class NewProjectProducer {
-
-	@Autowired 
+	
+	@Autowired
 	private JmsTemplate jmsTemplate;
 	
 	public void sendMessage(Project project) {
+		jmsTemplate.setPubSubDomain(true);
 		jmsTemplate.convertAndSend("new.project.topic", project.toJSON());
 	}
 }
