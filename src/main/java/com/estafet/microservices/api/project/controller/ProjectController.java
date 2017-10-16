@@ -24,6 +24,11 @@ public class ProjectController {
 	@Autowired
 	private ProjectService projectService;
 	
+	@GetMapping("/api/project")
+	public Project projectAPI() {
+		return Project.getAPI();
+	}
+	
 	@GetMapping("/project/{id}")
 	public Project getProject(@PathVariable int id) {
 		return projectService.getProject(id);

@@ -44,5 +44,12 @@ public class Project {
 			throw new RuntimeException(e);
 		}
 	}
+	
+	public static Project getAPI() {
+		Project project = new Project();
+		project.id = 1;
+		project.title = "my project";
+		return project;
+	}
 
 }
