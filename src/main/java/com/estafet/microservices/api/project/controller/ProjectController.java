@@ -24,7 +24,7 @@ public class ProjectController {
 	@Autowired
 	private ProjectService projectService;
 	
-	@GetMapping("/api/project")
+	@GetMapping("/api")
 	public Project projectAPI() {
 		return Project.getAPI();
 	}
