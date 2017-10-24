@@ -9,11 +9,9 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.estafet.microservices.api.project.messages.ProjectDetails;
 import com.estafet.microservices.api.project.model.Project;
 import com.estafet.microservices.api.project.service.ProjectService;
 
@@ -40,14 +38,8 @@ public class ProjectController {
 	}
 	
 	@PostMapping("/project")
-	public ResponseEntity createProject(@RequestBody ProjectDetails message) {
-		return new ResponseEntity(projectService.createProject(message), HttpStatus.OK);
-	}
-	
-	@PutMapping("/project/{id}")
-	public ResponseEntity changeProjectDetails(@PathVariable int id, @RequestBody ProjectDetails message) {
-		projectService.changeProjectDetails(id, message);
-		return new ResponseEntity(projectService.getProject(id), HttpStatus.OK);
+	public ResponseEntity createProject(@RequestBody Project project) {
+		return new ResponseEntity(projectService.createProject(project), HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/project/{id}")

@@ -19,12 +19,18 @@ public class Project {
 	@SequenceGenerator(name = "PROJECT_ID_SEQ", sequenceName = "PROJECT_ID_SEQ", allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PROJECT_ID_SEQ")
 	@Column(name = "PROJECT_ID")
-	private int id;
+	private Integer id;
 
 	@Column(name = "TITLE", nullable = false)
 	private String title;
 
-	public int getId() {
+	@Column(name = "NO_SPRINTS", nullable = false)
+	private Integer noSprints;
+
+	@Column(name = "SPRINT_LENGTH_DAYS", nullable = false)
+	private Integer sprintLengthDays;
+
+	public Integer getId() {
 		return id;
 	}
 
@@ -36,7 +42,23 @@ public class Project {
 		this.title = title;
 		return this;
 	}
-	
+
+	public Integer getNoSprints() {
+		return noSprints;
+	}
+
+	public void setNoSprints(Integer noSprints) {
+		this.noSprints = noSprints;
+	}
+
+	public Integer getSprintLengthDays() {
+		return sprintLengthDays;
+	}
+
+	public void setSprintLengthDays(Integer sprintLengthDays) {
+		this.sprintLengthDays = sprintLengthDays;
+	}
+
 	public String toJSON() {
 		try {
 			return new ObjectMapper().writeValueAsString(this);
@@ -44,7 +66,7 @@ public class Project {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	public static Project getAPI() {
 		Project project = new Project();
 		project.id = 1;

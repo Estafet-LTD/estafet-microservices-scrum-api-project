@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.estafet.microservices.api.project.dao.ProjectDAO;
-import com.estafet.microservices.api.project.messages.ProjectDetails;
 import com.estafet.microservices.api.project.model.Project;
 
 @Service
@@ -27,15 +26,8 @@ public class ProjectService {
 	}
 
 	@Transactional
-	public Project createProject(ProjectDetails message) {
-		return projectDAO.createProject(message.getProject());
-	}
-
-	@Transactional
-	public void changeProjectDetails(int projectId, ProjectDetails message) {
-		Project project = getProject(projectId);
-		project.setTitle(message.getTitle());
-		projectDAO.updateProject(project);
+	public Project createProject(Project project) {
+		return projectDAO.createProject(project);
 	}
 
 	@Transactional
