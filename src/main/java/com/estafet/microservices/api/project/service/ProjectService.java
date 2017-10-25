@@ -27,7 +27,7 @@ public class ProjectService {
 
 	@Transactional
 	public Project createProject(Project project) {
-		return projectDAO.createProject(project);
+		return projectDAO.createProject(project.clone());
 	}
 
 	@Transactional

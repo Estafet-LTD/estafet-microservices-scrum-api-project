@@ -13,7 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Entity
 @Table(name = "PROJECT")
-public class Project {
+public class Project implements Cloneable {
 
 	@Id
 	@SequenceGenerator(name = "PROJECT_ID_SEQ", sequenceName = "PROJECT_ID_SEQ", allocationSize = 1)
@@ -59,6 +59,14 @@ public class Project {
 		this.sprintLengthDays = sprintLengthDays;
 	}
 
+	public Project clone() {
+        try {
+			return (Project)super.clone();
+		} catch (CloneNotSupportedException e) {
+			throw new RuntimeException(e);
+		}
+    }
+	
 	public String toJSON() {
 		try {
 			return new ObjectMapper().writeValueAsString(this);
