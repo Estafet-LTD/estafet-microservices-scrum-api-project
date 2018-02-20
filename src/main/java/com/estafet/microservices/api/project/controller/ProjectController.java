@@ -32,7 +32,7 @@ public class ProjectController {
 		return projectService.getProject(id);
 	}
 	
-	@GetMapping(value = "/projects")
+	@GetMapping(value = "/project")
 	public List<Project> getProjects() {
 		return projectService.getProjects();
 	}
