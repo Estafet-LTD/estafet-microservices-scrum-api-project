@@ -1,0 +1,10 @@
+---
+# Define the name of the microservice
+microservice: project-api
+create_ddl: create-project-api-db.ddl
+drop_ddl: drop-project-api-db.ddl
+db_url_env: PROJECT_API_JDBC_URL
+db_user_env: PROJECT_API_DB_USER
+db_db_env: PROJECT_API_DB_PASSWORD
+service_host: project-api.microservices-scrum.svc 
+service_uri_env: PROJECT_API_SERVICE_URI
