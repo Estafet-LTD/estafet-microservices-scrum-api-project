@@ -1,9 +1,8 @@
 ---
 - name: creates the database for microservice
   hosts: localhost
-  vars_files: 
-    - microservice-vars.yml
-  tasks:
+  tasks:  
+    - include: "{{ workdir }}/{{ repo }}/microservice-vars.yml"
   
     - name: Read the database pod list
       shell: "oc get pods --selector app=postgresql -o json"
