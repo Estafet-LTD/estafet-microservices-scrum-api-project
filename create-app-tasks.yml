@@ -1,17 +1,7 @@
 ---
-- name: Read the database pod list
-  shell: "oc get pods --selector app=postgresql -o json"
-  register: list_of_db_pods
-    
-- name: Get the name of the PostgreSQL Pod
-  set_fact: db_pod="{{list_of_db_pods.stdout|from_json|json_query('items[0].metadata.name')}}"
+- include: postgres-vars.yml 
   
-- name: Read the DB pod services
-  shell: "oc get service/postgresql -o json"
-  register: list_of_db_services
-      
-- name: Get the cluster id address for the db
-  set_fact: db_ip="{{list_of_db_services.stdout|from_json|json_query('spec.clusterIP')}}"  
+- include: a-mq-vars.yml  
 
 - name: include the variables for this microservice      
   include_vars:
@@ -56,8 +46,6 @@
 - set_fact: service_envs="-e JAEGER_SAMPLER_TYPE=const -e JAEGER_SAMPLER_PARAM=1 -e JAEGER_SAMPLER_MANAGER_HOST_PORT=jaeger-agent.microservices-scrum.svc:5778 -e JAEGER_AGENT_HOST=jaeger-agent.microservices-scrum.svc"
 
 - set_fact: service_envs="{{ service_envs }} -e {{ service_uri_env }}=http://{{ service_host }}:8080"
-  
-- include: a-mq-vars.yml   
   
 - name: Create the microservices application from the source to image builder for db application
   shell: 'oc new-app redhat-openjdk18-openshift~{{ github }}/{{ repo }} --name={{ microservice }} -e {{ db_url_env }}=jdbc:postgresql://{{ db_ip }}:5432/{{ microservice }} -e {{ db_user_env }}=postgres -e {{ db_db_env }}=welcome1 -e JBOSS_A_MQ_BROKER_URL=tcp://{{ broker_ip }}:61616 -e JBOSS_A_MQ_BROKER_USER={{ broker_pod_user }} -e JBOSS_A_MQ_BROKER_PASSWORD={{ broker_pod_password }} {{ service_envs }} && sleep 120'
