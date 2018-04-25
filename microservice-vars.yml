@@ -1,7 +1,4 @@
 ---
-# Define the name of the OpenShift project
-project_name: microservices-scrum
-
 # Define the name of the microservice
 microservice: project-api
 
