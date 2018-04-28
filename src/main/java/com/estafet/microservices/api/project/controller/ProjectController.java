@@ -39,7 +39,7 @@ public class ProjectController {
 		return projectService.getProject(id);
 	}
 	
-	@GetMapping(value = "/project")
+	@GetMapping(value = "/projects")
 	public List<Project> getProjects() {
 		tracer.activeSpan().setTag("api", false);
 		return projectService.getProjects();
