@@ -62,7 +62,7 @@ public class ITProjectTest {
 	@Test
 	@DatabaseSetup("ITProjectTest-data.xml")
 	public void testGetProject() {
-		get("/project/2000").then().statusCode(HttpURLConnection.HTTP_OK).body("id", equalTo(2))
+		get("/project/2000").then().statusCode(HttpURLConnection.HTTP_OK).body("id", equalTo(2000))
 				.body("title", equalTo("My Project #7082")).body("noSprints", equalTo(5));
 	}
 
