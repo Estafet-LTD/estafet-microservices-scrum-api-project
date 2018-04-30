@@ -17,7 +17,7 @@ node("maven") {
 		openshiftVerifyDeployment namespace: "microservices-scrum", depCfg: "project-api", replicaCount:"1", verifyReplicaCount: "true", waitTime: "300000"	
 	}
 
-	stage("set the environment variables for the container tests") {
+	stage("execute the container tests") {
 		env.PROJECT_API_JDBC_URL = "jdbc:postgresql://postgresql.microservices-scrum.svc/project-api"
 		env.PROJECT_API_DB_USER = "postgres"
 		env.PROJECT_API_DB_PASSWRD = "welcome1"
@@ -25,9 +25,6 @@ node("maven") {
 		env.JBOSS_A_MQ_BROKER_URL = "tcp://broker-amq-tcp.microservices-scrum.svc:61616"
 		env.JBOSS_A_MQ_BROKER_USER = "userqsi"
 		env.JBOSS_A_MQ_BROKER_PASSWORD = "sGp4Nt3J"
-	}
-
-	stage("execute the container tests") {
 		sh "mvn verify -P integration-test"
 		junit "**/target/failsafe-reports/*.xml"
 	}
