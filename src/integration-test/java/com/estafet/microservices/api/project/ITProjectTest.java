@@ -73,13 +73,14 @@ public class ITProjectTest {
 	}
 
 	@Test
+	@DatabaseSetup("ITProjectTest-data.xml")
 	public void testCreateProject() throws Exception {
 		given().contentType(ContentType.JSON)
 				.body("{\"title\":\"My Project #1\",\"noSprints\":5,\"sprintLengthDays\":5}").when().post("/project")
-				.then().statusCode(HttpURLConnection.HTTP_OK).body("id", greaterThan(1))
+				.then().statusCode(HttpURLConnection.HTTP_OK).body("id", is(3))
 				.body("title", equalTo("My Project #1"));
 		Project project = new ObjectMapper().readValue(topic.getProject(3000), Project.class);
-		assertThat(project.getId(), greaterThan(1));
+		assertThat(project.getId(), is(3));
 		assertThat(project.getTitle(), is("My Project #1"));
 		assertThat(project.getNoSprints(), is(5));
 		assertThat(project.getSprintLengthDays(), is(5));
