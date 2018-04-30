@@ -9,6 +9,14 @@ node("maven") {
 		junit "**/target/surefire-reports/*.xml"
 	}
 
+	stage("update the database schema") {
+		sh "oc get pods --selector app=postgresql -o json > pods.json"
+		pod = new JsonSlurper().parseText(new File("pods.json").text).items[0].metadata.name
+		sh "oc rsync --no-perms=true --include="*.ddl" --exclude="*" ./ ${pod}:/tmp"
+		sh 'oc exec {{db_pod}} -- /bin/sh -i -c "psql -d project-api -U postgres -f /tmp/drop-project-api-db.ddl"'
+		sh 'oc exec {{db_pod}} -- /bin/sh -i -c "psql -d project-api -U postgres -f /tmp/create-project-api-db.ddl"'
+	}
+
 	stage("build & deploy container") {
 		openshiftBuild namespace: "microservices-scrum", buildConfig: "project-api", showBuildLogs: "true",  waitTime: "3000000"
 	}
