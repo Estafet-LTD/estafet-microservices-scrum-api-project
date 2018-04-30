@@ -3,14 +3,14 @@ node('maven') {
 	stage 'checkout source'
 	git branch: 'master', url: 'https://github.com/Estafet-LTD/estafet-microservices-scrum-api-project'
 
-	stage "build and execute unit tests" {
+	stage 'build and execute unit tests' {
 		steps {
 			sh 'mvn clean install'
 			junit '**/target/surefire-reports/*.xml'
 		}
 	}
 
-	stage "build & deploy microservice container"
+	stage 'build & deploy microservice container'
   	openshiftBuild(namespace: 'microservices-scrum',
 				   buildConfig: 'project-api',
 			       showBuildLogs: 'true',
