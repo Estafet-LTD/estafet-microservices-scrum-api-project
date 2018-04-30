@@ -11,7 +11,7 @@ node("maven") {
 
 	stage("update the database schema") {
 		sh "oc get pods --selector app=postgresql -o json -n microservices-scrum > pods.json"
-		pod = new groovy.json.JsonSlurper().parseText(readFile('pods.json')).items[0].metadata.name
+		pod = new groovy.json.JsonSlurper().parseText(readFile('pods.json')).items[0].metadata.name.text
 		sh 'oc rsync --no-perms=true --include="*.ddl" --exclude="*" ./ ${pod}:/tmp -n microservices-scrum'
 		sh 'oc exec {{db_pod}} -- /bin/sh -i -c "psql -d project-api -U postgres -f /tmp/drop-project-api-db.ddl" -n microservices-scrum'
 		sh 'oc exec {{db_pod}} -- /bin/sh -i -c "psql -d project-api -U postgres -f /tmp/create-project-api-db.ddl" -n microservices-scrum'
