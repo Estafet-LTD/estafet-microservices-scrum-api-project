@@ -1,0 +1,31 @@
+node('maven') {
+
+	stage 'checkout source'
+	git branch: 'master', url: 'https://github.com/Estafet-LTD/estafet-microservices-scrum-api-project'
+
+	stage 'compile and test code'
+	sh 'mvn clean install'
+	
+	junit '**/target/surefire-reports/*.xml'
+
+	stage 'build & deploy into the ci environment'
+  	openshiftBuild(namespace: 'microservices-scrum',
+				   buildConfig: 'project-api',
+			       showBuildLogs: 'true',
+			       waitTime: '3000000')
+  
+	stage 'verify deployment into the ci environment'
+	openshiftVerifyDeployment(namespace: 'microservices-scrum',
+				       		  depCfg: 'project-api',
+				       		  replicaCount:'1',
+				       		  verifyReplicaCount: 'true',
+				       		  waitTime: '300000')
+
+	stage 'run the integration tests'
+	sh 'mvn verify -P integration-test'
+	
+	junit '**/target/failsafe-reports/*.xml'
+
+
+
+}

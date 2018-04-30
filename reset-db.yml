@@ -5,17 +5,6 @@
     - vars.yml
   tasks:
      
-    - name: Checkout source code from Github for db schemas
-      git:
-        repo: "https://github.com/Estafet-LTD/{{ item.repo }}"
-        dest: "{{ workdir }}/{{ item.repo }}"
-        update: yes
-      when: "{{ item.db }}"
-      with_items: "{{ microservices_scrum_projects }}"
-      when: "{{ clone_modules }}"
-      tags:
-        - git     
-     
     - name: Login in Openshift
       shell: "oc login --insecure-skip-tls-verify=true -u {{ username }} -p {{ password }} {{ openshift }}"
       tags:
@@ -55,15 +44,5 @@
       tags:
         - openshift
         - postgresql
-      
-    - name: Redeploy all of the applications that have databases
-      shell: "oc deploy {{ item.name }} --latest && sleep 5"
-      register: command_result
-      when: "{{ item.db }}"
-      with_items: "{{ microservices_scrum_projects }}"      
-      failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
-      changed_when: "'exists' not in command_result.stderr"
-      tags:
-        - openshift           
 
             
