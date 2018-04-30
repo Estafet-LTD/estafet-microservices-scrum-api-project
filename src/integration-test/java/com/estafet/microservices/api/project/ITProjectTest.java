@@ -62,14 +62,14 @@ public class ITProjectTest {
 	@Test
 	@DatabaseSetup("ITProjectTest-data.xml")
 	public void testGetProject() {
-		get("/project/2").then().statusCode(HttpURLConnection.HTTP_OK).body("id", equalTo(2))
+		get("/project/2000").then().statusCode(HttpURLConnection.HTTP_OK).body("id", equalTo(2))
 				.body("title", equalTo("My Project #7082")).body("noSprints", equalTo(5));
 	}
 
 	@Test
 	@DatabaseSetup("ITProjectTest-data.xml")
 	public void testGetProjects() {
-		get("/projects").then().body("id", hasItems(1, 2));
+		get("/projects").then().body("id", hasItems(1000, 2000));
 	}
 
 	@Test
@@ -77,10 +77,10 @@ public class ITProjectTest {
 	public void testCreateProject() throws Exception {
 		given().contentType(ContentType.JSON)
 				.body("{\"title\":\"My Project #1\",\"noSprints\":5,\"sprintLengthDays\":5}").when().post("/project")
-				.then().statusCode(HttpURLConnection.HTTP_OK).body("id", is(3))
+				.then().statusCode(HttpURLConnection.HTTP_OK).body("id", is(1))
 				.body("title", equalTo("My Project #1"));
 		Project project = new ObjectMapper().readValue(topic.getProject(3000), Project.class);
-		assertThat(project.getId(), is(3));
+		assertThat(project.getId(), is(1));
 		assertThat(project.getTitle(), is("My Project #1"));
 		assertThat(project.getNoSprints(), is(5));
 		assertThat(project.getSprintLengthDays(), is(5));
