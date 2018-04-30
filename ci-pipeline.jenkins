@@ -14,8 +14,8 @@ node("maven") {
 		def json = readFile('pods.json');
 		def pod = new groovy.json.JsonSlurper().parseText(json).items[0].metadata.name
 		sh "oc rsync --no-perms=true --include=\"*.ddl\" --exclude=\"*\" ./ ${pod}:/tmp -n microservices-scrum"
-		sh "oc exec ${pod} 'psql -d project-api -U postgres -f /tmp/drop-project-api-db.ddl' -n microservices-scrum"
-		sh "oc exec ${pod} 'psql -d project-api -U postgres -f /tmp/create-project-api-db.ddl' -n microservices-scrum"
+		sh "oc exec ${pod}  -n microservices-scrum -- /bin/sh -i -c \"psql -d project-api -U postgres -f /tmp/drop-project-api-db.ddl\""
+		sh "oc exec ${pod}  -n microservices-scrum -- /bin/sh -i -c \"psql -d project-api -U postgres -f /tmp/create-project-api-db.ddl\""
 	}
 
 	stage("build & deploy container") {
