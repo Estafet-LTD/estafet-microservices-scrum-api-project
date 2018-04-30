@@ -4,8 +4,10 @@ node('maven') {
 	git branch: 'master', url: 'https://github.com/Estafet-LTD/estafet-microservices-scrum-api-project'
 
 	stage "build and execute unit tests" {
-		sh 'mvn clean install'
-		junit '**/target/surefire-reports/*.xml'
+		steps {
+			sh 'mvn clean install'
+			junit '**/target/surefire-reports/*.xml'
+		}
 	}
 
 	stage "build & deploy microservice container"
@@ -22,8 +24,19 @@ node('maven') {
 				       		  waitTime: '300000')
 
 	stage 'execute the container tests' {
-		sh 'mvn verify -P integration-test'
-		junit '**/target/failsafe-reports/*.xml'
+		environment { 
+                PROJECT_API_JDBC_URL = 'jdbc:postgresql://postgresql.microservices-scrum.svc/project-api'
+                PROJECT_API_DB_USER = 'postgres'
+                PROJECT_API_DB_PASSWRD = 'welcome1'
+                PROJECT_API_SERVICE_URI = 'http://project-api.microservices-scrum.svc'
+                JBOSS_A_MQ_BROKER_URL = 'tcp://broker-amq-tcp.microservices-scrum.svc:61616'
+                JBOSS_A_MQ_BROKER_USER = 'userqsi'
+                JBOSS_A_MQ_BROKER_PASSWORD = 'sGp4Nt3J'
+		}
+		steps {
+			sh 'mvn verify -P integration-test'
+			junit '**/target/failsafe-reports/*.xml'
+		}
 	}
 
 }
