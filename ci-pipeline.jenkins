@@ -1,15 +1,5 @@
 node("maven") {
 
-	environment {
-		PROJECT_API_JDBC_URL = "jdbc:postgresql://postgresql.microservices-scrum.svc/project-api"
-		PROJECT_API_DB_USER = "postgres"
-		PROJECT_API_DB_PASSWRD = "welcome1"
-		PROJECT_API_SERVICE_URI = "http://project-api.microservices-scrum.svc"
-		JBOSS_A_MQ_BROKER_URL = "tcp://broker-amq-tcp.microservices-scrum.svc:61616"
-		JBOSS_A_MQ_BROKER_USER = "userqsi"
-		JBOSS_A_MQ_BROKER_PASSWORD = "sGp4Nt3J"
-	}	
-
 	stage("checkout") {
 		git branch: "master", url: "https://github.com/Estafet-LTD/estafet-microservices-scrum-api-project"
 	}
@@ -31,7 +21,11 @@ node("maven") {
 		withEnv(
 			[	"PROJECT_API_JDBC_URL=jdbc:postgresql://postgresql.microservices-scrum.svc/project-api", 
 				"PROJECT_API_DB_USER=postgres", 
-				"PROJECT_API_DB_PASSWORD=welcome1"
+				"PROJECT_API_DB_PASSWORD=welcome1",
+				"PROJECT_API_SERVICE_URI=http://project-api.microservices-scrum.svc",
+				"JBOSS_A_MQ_BROKER_URL=tcp://broker-amq-tcp.microservices-scrum.svc:61616",
+				"JBOSS_A_MQ_BROKER_USER=userqsi",
+				"JBOSS_A_MQ_BROKER_PASSWORD=sGp4Nt3J"
 			]) {
 			sh "mvn verify -P integration-test"
 		}
