@@ -6,7 +6,7 @@ node("maven") {
 
 	stage("build and execute unit tests") {
 		sh "mvn clean test"
-		junit "**/target/sure-fire-reports/*.xml"
+		junit "**/target/surefire-reports/*.xml"
 	}
 
 }
