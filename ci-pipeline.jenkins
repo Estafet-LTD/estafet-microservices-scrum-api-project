@@ -30,7 +30,8 @@ node("maven") {
 	stage("execute the container tests") {
 		withEnv(
 			[	"PROJECT_API_JDBC_URL=jdbc:postgresql://postgresql.microservices-scrum.svc/project-api", 
-				"PROJECT_API_DB_USER=postgres", "PROJECT_API_DB_PASSWORD=welcome1"
+				"PROJECT_API_DB_USER=postgres", 
+				"PROJECT_API_DB_PASSWORD=welcome1"
 			]) {
 			sh "mvn verify -P integration-test"
 		}
