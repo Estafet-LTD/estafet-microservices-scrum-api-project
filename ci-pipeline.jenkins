@@ -4,10 +4,8 @@ node('maven') {
 	git branch: 'master', url: 'https://github.com/Estafet-LTD/estafet-microservices-scrum-api-project'
 
 	stage 'build and execute unit tests' {
-		steps {
-			sh 'mvn clean install'
-			junit '**/target/surefire-reports/*.xml'
-		}
+		sh 'mvn clean install'
+		junit '**/target/surefire-reports/*.xml'
 	}
 
 	stage 'build & deploy microservice container'
@@ -33,10 +31,8 @@ node('maven') {
                 JBOSS_A_MQ_BROKER_USER = 'userqsi'
                 JBOSS_A_MQ_BROKER_PASSWORD = 'sGp4Nt3J'
 		}
-		steps {
-			sh 'mvn verify -P integration-test'
-			junit '**/target/failsafe-reports/*.xml'
-		}
+		sh 'mvn verify -P integration-test'
+		junit '**/target/failsafe-reports/*.xml'
 	}
 
 }
