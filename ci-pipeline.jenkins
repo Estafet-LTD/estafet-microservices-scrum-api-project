@@ -1,42 +1,42 @@
-node('maven') {
+node("maven") {
 
-	stage 'checkout source' {
-		git branch: 'master', url: 'https://github.com/Estafet-LTD/estafet-microservices-scrum-api-project'
+	stage("checkout") {
+		git branch: "master", url: "https://github.com/Estafet-LTD/estafet-microservices-scrum-api-project"
 	}
 
-	stage 'build and execute unit tests' {
-		sh 'mvn clean install'
-		junit '**/target/sure-fire-reports/*.xml'
+	stage("build and execute unit tests") {
+		sh "mvn clean test"
+		junit "**/target/sure-fire-reports/*.xml"
 	}
 
 }
 
 node {
 
-	stage 'build & deploy microservice container' {
-		openshiftBuild namespace: 'microservices-scrum', buildConfig: 'project-api', showBuildLogs: 'true',  waitTime: '3000000'
+	stage("build & deploy container") {
+		openshiftBuild namespace: "microservices-scrum", buildConfig: "project-api", showBuildLogs: "true",  waitTime: "3000000"
 	}
   	  
-	stage 'verify container deployment' {
-		openshiftVerifyDeployment namespace: 'microservices-scrum', depCfg: 'project-api', replicaCount:'1', verifyReplicaCount: 'true', waitTime: '300000'	
+	stage("verify container deployment") {
+		openshiftVerifyDeployment namespace: "microservices-scrum", depCfg: "project-api", replicaCount:"1", verifyReplicaCount: "true", waitTime: "300000"	
 	}
 }
 
-node('maven') {
+node("maven") {
 
-	stage 'set the environment variables for the container tests' {
-		env.PROJECT_API_JDBC_URL = 'jdbc:postgresql://postgresql.microservices-scrum.svc/project-api'
-        env.PROJECT_API_DB_USER = 'postgres'
-        env.PROJECT_API_DB_PASSWRD = 'welcome1'
-        env.PROJECT_API_SERVICE_URI = 'http://project-api.microservices-scrum.svc'
-        env.JBOSS_A_MQ_BROKER_URL = 'tcp://broker-amq-tcp.microservices-scrum.svc:61616'
-        env.JBOSS_A_MQ_BROKER_USER = 'userqsi'
-        env.JBOSS_A_MQ_BROKER_PASSWORD = 'sGp4Nt3J'
+	stage("set the environment variables for the container tests") {
+		env.PROJECT_API_JDBC_URL = "jdbc:postgresql://postgresql.microservices-scrum.svc/project-api"
+        env.PROJECT_API_DB_USER = "postgres"
+        env.PROJECT_API_DB_PASSWRD = "welcome1"
+        env.PROJECT_API_SERVICE_URI = "http://project-api.microservices-scrum.svc"
+        env.JBOSS_A_MQ_BROKER_URL = "tcp://broker-amq-tcp.microservices-scrum.svc:61616"
+        env.JBOSS_A_MQ_BROKER_USER = "userqsi"
+        env.JBOSS_A_MQ_BROKER_PASSWORD = "sGp4Nt3J"
 	}
 
-	stage 'execute the container tests' {
-		sh 'mvn verify -P integration-test'
-		junit '**/target/failsafe-reports/*.xml'
+	stage("execute the container tests") {
+		sh "mvn verify -P integration-test"
+		junit "**/target/failsafe-reports/*.xml"
 	}
 	
 }
