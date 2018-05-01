@@ -21,7 +21,7 @@ node("maven") {
 	}
 
 	stage("build & deploy container") {
-		openshiftBuild namespace: $project, buildConfig: $microservice, showBuildLogs: "true",  waitTime: "3000000"
+		openshiftBuild namespace: project, buildConfig: microservice, showBuildLogs: "true",  waitTime: "3000000"
 	}
   	  
 	stage("verify container deployment") {
