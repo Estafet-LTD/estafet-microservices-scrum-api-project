@@ -4,8 +4,8 @@ metadata:
   creationTimestamp: null
   labels:
     app: pipeline
-    name: ci-pipeline-project-api
-  name: ci-pipeline-project-api
+    name: ci-project-api
+  name: ci-project-api
 spec:
   output: {}
   postCommit: {}
@@ -16,7 +16,7 @@ spec:
       uri: "https://github.com/Estafet-LTD/estafet-microservices-scrum-api-project"
   strategy:
     jenkinsPipelineStrategy:
-      jenkinsfilePath: ci-pipeline.jenkins
+      jenkinsfilePath: ci-pipeline.groovy
     type: JenkinsPipeline
   triggers:
   - github:
