@@ -9,9 +9,7 @@ node("maven") {
 
 	stage("build and execute unit tests") {
 		sh "mvn clean test"
-		always {
-			junit "**/target/surefire-reports/*.xml"
-		}
+		junit "**/target/surefire-reports/*.xml"	
 	}
 
 	stage("update the database schema") {
@@ -43,9 +41,7 @@ node("maven") {
 			]) {
 				sh "mvn verify -P integration-test"
 			}
-			always {
-				junit "**/target/failsafe-reports/*.xml"
-			}
+			junit "**/target/failsafe-reports/*.xml"
 	}
 
 }
