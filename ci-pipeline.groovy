@@ -9,11 +9,6 @@ node("maven") {
 
 	stage("build and execute unit tests") {
 		sh "mvn clean test"
-		post {
-			always {
-				junit "**/target/surefire-reports/*.xml"
-			}
-		}
 	}
 
 	stage("update the database schema") {
@@ -45,12 +40,20 @@ node("maven") {
 			]) {
 			sh "mvn verify -P integration-test"
 		}
-		post {
-			always {
-				junit "**/target/failsafe-reports/*.xml"
-			}
-		}
 	}
+	
+	post {
+    	always {
+    		junit "**/target/surefire-reports/*.xml"
+      		junit "**/target/failsafe-reports/*.xml"
+    	}
+    	success {
+      		echo "Success!"
+    	}
+    	failure {
+      		echo "Success!"
+    	}
+    }
 
 }
 

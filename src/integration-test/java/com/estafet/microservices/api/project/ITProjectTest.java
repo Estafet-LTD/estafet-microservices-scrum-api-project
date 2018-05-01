@@ -55,8 +55,7 @@ public class ITProjectTest {
 
 	@Test
 	public void testProjectAPI() {
-		get("/api").then().body("id", equalTo(1));
-		get("/api").then().body("title", equalTo("my project"));
+		get("/api").then().body("id", equalTo(1)).body("title", equalTo("my project"));
 	}
 
 	@Test
