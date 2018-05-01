@@ -25,7 +25,7 @@ node("maven") {
 	}
   	  
 	stage("verify container deployment") {
-		openshiftVerifyDeployment namespace: $project, depCfg: $microservice, replicaCount:"1", verifyReplicaCount: "true", waitTime: "300000"	
+		openshiftVerifyDeployment namespace: project, depCfg: microservice, replicaCount:"1", verifyReplicaCount: "true", waitTime: "300000"	
 	}
 
 	stage("execute the container tests") {
