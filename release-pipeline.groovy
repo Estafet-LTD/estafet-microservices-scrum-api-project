@@ -27,13 +27,7 @@ node() {
 		def json = readFile ('is.json')
 		def image = getImage(json, microservice)
 		def template = readFile ('test-deployment-config.json').replaceAll(/\$\{image\}/, image).replaceAll(/\$\{microservice\}/, microservice)
-		println template
-		
-		writeFile file:"dc.json", text:template
-		
-		sh "oc create -f dc.json"		
-		
-		//openshiftCreateResource namespace:project, jsonyaml:template	
+		openshiftCreateResource namespace:project, jsonyaml:template	
 	}
   	  
 	stage("verify test container deployment") {
