@@ -22,6 +22,7 @@ node() {
 		def item = new groovy.json.JsonSlurper().parseText(json).items.find{it.metadata.name == microservice}
 		def image = item.status.dockerImageRepository
 		println image
+        def deploymentConfig = readFile('test-deployment-config.yaml')
 	}
 
 }
