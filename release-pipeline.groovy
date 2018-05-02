@@ -20,7 +20,7 @@ node() {
 		sh "oc get is -o json -n ${project} > is.json"
 		def json = readFile('is.json');
 		def item = new groovy.json.JsonSlurper().parseText(json).items.find{it.metadata.name == microservice}
-		def image = item.status.dockerImageRepository
+		def image = item.status.dockerImageRepository.text
 		sh "oc create dc ${microservice} --image=${image}:PrepareForTesting"
 		sh "oc set env dc/${microservice} -e JAEGER_SAMPLER_TYPE=const -e JAEGER_SAMPLER_PARAM=1 -e JAEGER_SAMPLER_MANAGER_HOST_PORT=jaeger-agent.${project}.svc:5778 -e JAEGER_AGENT_HOST=jaeger-agent.${project}.svc"
 		sh "oc set env dc/${microservice} -e PROJECT_API_JDBC_URL=jdbc:postgresql://postgresql.${project}.svc:5432/${microservice} -e PROJECT_API_DB_USER=postgres -e PROJECT_API_DB_PASSWORD=welcome1" 
