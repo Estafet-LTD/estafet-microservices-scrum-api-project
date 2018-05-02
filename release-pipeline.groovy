@@ -19,7 +19,8 @@ node() {
 	stage("deploy the test container") {
 		sh "oc get is -o json -n ${project} > is.json"
 		def json = readFile('is.json');
-		def image = new groovy.json.JsonSlurper().parseText(json).items.'**'.find {it.metadata.name == microservice}.status.dockerImageRepository
+		def item = new groovy.json.JsonSlurper().parseText(json).items.find{it.metadata.name == microservice}
+		def image = item.status.dockerImageRepository	
 		sh "oc create dc ${microservice} --image=$image:PrepareForTesting"
 		//openshiftDeploy namespace: project, deploymentConfig: microservice, waitTime: '300000'
 	}
