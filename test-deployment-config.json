@@ -1,0 +1,95 @@
+{
+	"spec": {
+		"template": {
+			"template": {
+				"spec": {
+					"containers": [
+						{
+							"env": [
+								{
+									"name": "JBOSS_A_MQ_BROKER_PASSWORD",
+									"value": "amq"
+								},
+								{
+									"name": "JBOSS_A_MQ_BROKER_URL",
+									"value": "tcp://broker-amq-tcp.test.svc:61616"
+								},
+								{
+									"name": "JBOSS_A_MQ_BROKER_USER",
+									"value": "amq"
+								},
+								{
+									"name": "PROJECT_API_DB_PASSWORD",
+									"value": "welcome1"
+								},
+								{
+									"name": "PROJECT_API_DB_USER",
+									"value": "postgres"
+								},
+								{
+									"name": "PROJECT_API_JDBC_URL",
+									"value": "jdbc:postgresql://postgresql.test.svc:5432/project-api"
+								},
+								{
+									"name": "JAEGER_SAMPLER_TYPE",
+									"value": "const"
+								},
+								{
+									"name": "JAEGER_SAMPLER_PARAM",
+									"value": "1"
+								},
+								{
+									"name": "JAEGER_SAMPLER_MANAGER_HOST_PORT",
+									"value": "jaeger-agent.test.svc:5778"
+								},
+								{
+									"name": "JAEGER_AGENT_HOST",
+									"value": "jaeger-agent.test.svc"
+								}
+							],
+							"name": "${microservice}",
+							"imagePullPolicy": "Always",
+							"image": "${image}:PrepareForTesting",
+							"ports": [
+								{
+									"containerPort": "8080",
+									"protocol": "TCP"
+								},
+								{
+									"containerPort": "8443",
+									"protocol": "TCP"
+								},
+								{
+									"containerPort": "8778",
+									"protocol": "TCP"
+								}
+							],
+							"readinessProbe": {
+								"failureThreshold": "3",
+								"initialDelaySeconds": "60",
+								"periodSeconds": "10",
+								"successThreshold": "1",
+								"timeoutSeconds": "1",
+								"httpGet": {
+									"path": "/api",
+									"port": "8080",
+									"scheme": "HTTP"
+								}
+							},
+							"resources": {
+								"limits": {
+									"cpu": "500m",
+									"memory": "150Mi"
+								},
+								"requests": {
+									"cpu": "50m",
+									"memory": "50Mi"
+								}
+							}
+						}
+					]
+				}
+			}
+		}
+	}
+}
