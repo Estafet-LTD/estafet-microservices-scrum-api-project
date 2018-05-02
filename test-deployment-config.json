@@ -1,11 +1,9 @@
 {
 	"kind": "DeploymentConfig",
 	"metadata": {
-		"labels": [
-			{
-				"app": "${microservice}"
-			}
-		],
+		"labels": {
+			"app": "${microservice}"
+		},
 		"name": "${microservice}"
 	},
 	"spec": {
