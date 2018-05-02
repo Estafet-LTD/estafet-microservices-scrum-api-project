@@ -28,7 +28,7 @@ node() {
 		def image = getImage(json, microservice)
 		sh "oc create dc ${microservice} --image=${image}:PrepareForTesting -n ${project}"
 		sh "oc deploy ${microservice} --cancel -n ${project}"
-		sh "oc patch dc/${microservice} -p '{\" spec\":{\" template\":{\" spec\":{\" containers\":[{\" name":\" ${microservice}\",\" imagePullPolicy\":" Always\"}]}}}}' -n ${project}"
+		sh "oc patch dc/${microservice} -p '{\"spec\":{\"template\":{\"spec\":{\"containers\":[{\"name\":\"${microservice}\",\"imagePullPolicy\":\"Always\"}]}}}}' -n ${project}"
 		sh "oc label dc/${microservice} app=${microservice} -n ${project}"
 		sh "oc set env dc/${microservice} -e JAEGER_SAMPLER_TYPE=const -e JAEGER_SAMPLER_PARAM=1 -e JAEGER_SAMPLER_MANAGER_HOST_PORT=jaeger-agent.${project}.svc:5778 -e JAEGER_AGENT_HOST=jaeger-agent.${project}.svc -n ${project}"
 		sh "oc set env dc/${microservice} -e PROJECT_API_JDBC_URL=jdbc:postgresql://postgresql.${project}.svc:5432/${microservice} -e PROJECT_API_DB_USER=postgres -e PROJECT_API_DB_PASSWORD=welcome1 -n ${project}" 
