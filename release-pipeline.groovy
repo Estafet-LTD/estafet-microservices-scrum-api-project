@@ -29,9 +29,8 @@ node() {
 		def template = readFile ('test-deployment-config.json').replaceAll(/\$\{image\}/, image).replaceAll(/\$\{microservice\}/, microservice)
 		println template
 		
-		new File('dc.json').withWriter { w ->
-			w << template
-		}
+		writeFile tempate
+		
 		
 		sh "oc create -f dc.json"		
 		
