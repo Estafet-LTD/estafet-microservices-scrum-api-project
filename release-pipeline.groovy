@@ -21,7 +21,7 @@ node() {
 		def json = readFile('is.json');
 		def item = new groovy.json.JsonSlurper().parseText(json).items.find{it.metadata.name == microservice}
 		def image = item.status.dockerImageRepository
-		println ${image}
+		println image
 		//sh "oc create dc ${microservice} --image=${image}:PrepareForTesting"
 		//openshiftDeploy namespace: project, deploymentConfig: microservice, waitTime: '300000'
 	}
