@@ -1,7 +1,5 @@
 @NonCPS
-def getImage() {
-	sh "oc get is -o json -n test > is.json"
-	def json = readFile('is.json');
+def getImage(String json) {
 	def item = new groovy.json.JsonSlurper().parseText(json).items.find{it.metadata.name == microservice}
 	String image = item.status.dockerImageRepository
 	println image
@@ -27,7 +25,9 @@ node() {
 	}
 	
 	stage("deploy the test container") {
-		def image = getImage()
+		sh "oc get is -o json -n test > is.json"
+		def json = readFile('is.json')
+		def image = getImage(json)
         println image
 		sh "oc create dc ${microservice} --image=${image}:PrepareForTesting -n ${project}"
 		sh "oc set env dc/${microservice} -e JAEGER_SAMPLER_TYPE=const -e JAEGER_SAMPLER_PARAM=1 -e JAEGER_SAMPLER_MANAGER_HOST_PORT=jaeger-agent.${project}.svc:5778 -e JAEGER_AGENT_HOST=jaeger-agent.${project}.svc -n ${project}"
