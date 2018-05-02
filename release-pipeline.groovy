@@ -20,14 +20,14 @@ node() {
 		sh "oc get is -o json -n ${project} > is.json"
 		def json = readFile('is.json');
 		def item = new groovy.json.JsonSlurper().parseText(json).items.find{it.metadata.name == microservice}
-		def image = item.status.dockerImageRepository	
-		sh "oc create dc ${microservice} --image=$image:PrepareForTesting"
+		//def image = item.status.dockerImageRepository	
+		//sh "oc create dc ${microservice} --image=$image:PrepareForTesting"
 		//openshiftDeploy namespace: project, deploymentConfig: microservice, waitTime: '300000'
 	}
   	  
-	stage("verify test container deployment") {
-		openshiftVerifyDeployment namespace: project, depCfg: microservice, replicaCount:"1", verifyReplicaCount: "true", waitTime: "300000"	
-	}
+	//stage("verify test container deployment") {
+	//	openshiftVerifyDeployment namespace: project, depCfg: microservice, replicaCount:"1", verifyReplicaCount: "true", waitTime: "300000"	
+	//}
 
 }
 
