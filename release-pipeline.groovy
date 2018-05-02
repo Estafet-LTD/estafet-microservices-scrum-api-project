@@ -28,6 +28,7 @@ node() {
 		def image = getImage(json, microservice)
 		def template = readFile ('test-deployment-config.json').replaceAll(/\$\{image\}/, image).replaceAll(/\$\{microservice\}/, microservice)
 		openshiftCreateResource namespace:project, jsonyaml:template
+		sleep time:3, unit:"SECONDS"
 		sh "oc expose dc ${microservice} --port=8080 -n ${project}"	
 		sh "oc expose dc ${microservice} --port=8443 -n ${project}"
 		sh "oc expose dc ${microservice} --port=8778 -n ${project}"
