@@ -22,11 +22,10 @@ node() {
 		def item = new groovy.json.JsonSlurper().parseText(json).items.find{it.metadata.name == microservice}
 		def image = item.status.dockerImageRepository
 		println image
-		sh "oc create dc ${microservice} --image=${image}:PrepareForTesting"
-		println "now set environment vairables"
-		sh "oc set env dc/${microservice} -e JAEGER_SAMPLER_TYPE=const -e JAEGER_SAMPLER_PARAM=1 -e JAEGER_SAMPLER_MANAGER_HOST_PORT=jaeger-agent.${project}.svc:5778 -e JAEGER_AGENT_HOST=jaeger-agent.${project}.svc"
-		sh "oc set env dc/${microservice} -e PROJECT_API_JDBC_URL=jdbc:postgresql://postgresql.${project}.svc:5432/${microservice} -e PROJECT_API_DB_USER=postgres -e PROJECT_API_DB_PASSWORD=welcome1" 
-		sh "oc set env dc/${microservice} -e JBOSS_A_MQ_BROKER_URL=tcp://broker-amq-tcp.${project}.svc:61616 -e JBOSS_A_MQ_BROKER_USER=amq -e JBOSS_A_MQ_BROKER_PASSWORD=amq"
+		sh "oc create dc ${microservice} --image=${image}:PrepareForTesting -n ${project}"
+		sh "oc set env dc/${microservice} -e JAEGER_SAMPLER_TYPE=const -e JAEGER_SAMPLER_PARAM=1 -e JAEGER_SAMPLER_MANAGER_HOST_PORT=jaeger-agent.${project}.svc:5778 -e JAEGER_AGENT_HOST=jaeger-agent.${project}.svc -n ${project}"
+		sh "oc set env dc/${microservice} -e PROJECT_API_JDBC_URL=jdbc:postgresql://postgresql.${project}.svc:5432/${microservice} -e PROJECT_API_DB_USER=postgres -e PROJECT_API_DB_PASSWORD=welcome1 -n ${project}" 
+		sh "oc set env dc/${microservice} -e JBOSS_A_MQ_BROKER_URL=tcp://broker-amq-tcp.${project}.svc:61616 -e JBOSS_A_MQ_BROKER_USER=amq -e JBOSS_A_MQ_BROKER_PASSWORD=amq -n ${project}"
 		//openshiftDeploy namespace: project, deploymentConfig: microservice, waitTime: '300000'
 	}
   	  
