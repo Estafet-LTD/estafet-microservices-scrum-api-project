@@ -26,8 +26,9 @@ node() {
 		sh "oc get is -o json -n test > is.json"
 		def json = readFile ('is.json')
 		def image = getImage(json, microservice)
-		def template = readFile ('test-deployment-config.json')
-		openshiftCreateResource namespace:project, jsonyaml:template.replaceAll(/\$\{image\}/, image).replaceAll(/\$\{microservice\}/, microservice)	
+		def template = readFile ('test-deployment-config.json').replaceAll(/\$\{image\}/, image).replaceAll(/\$\{microservice\}/, microservice)
+		println template
+		openshiftCreateResource namespace:project, jsonyaml:template	
 	}
   	  
 	stage("verify test container deployment") {
