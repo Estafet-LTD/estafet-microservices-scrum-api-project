@@ -1,6 +1,6 @@
 @NonCPS
 def getImage() {
-	sh "oc get is -o json -n ${project} > is.json"
+	sh "oc get is -o json -n test > is.json"
 	def json = readFile('is.json');
 	def item = new groovy.json.JsonSlurper().parseText(json).items.find{it.metadata.name == microservice}
 	return item.status.dockerImageRepository
