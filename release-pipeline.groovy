@@ -23,12 +23,7 @@ node() {
 		def image = item.status.dockerImageRepository
         def deploymentConfig = readFile('test-deployment-config.yaml')
         openshiftCreateResource yaml: deploymentConfig, waitTime: "300000"
-		//openshiftDeploy namespace: project, deploymentConfig: microservice, waitTime: '300000'
 	}
-  	  
-	//stage("verify test container deployment") {
-	//	openshiftVerifyDeployment namespace: project, depCfg: microservice, replicaCount:"1", verifyReplicaCount: "true", waitTime: "300000"	
-	//}
 
 }
 
