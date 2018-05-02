@@ -45,10 +45,6 @@ node("maven") {
 	}
 	
 	stage("tag container as preparing for testing") {
-		sh "oc get pods --selector app=postgresql -o json -n test > test-pods.json"
-		def json = readFile('test-pods.json');
-		def pod = new groovy.json.JsonSlurper().parseText(json).items[0].metadata.name
-		sh "oc rsync --no-perms=true --include=\"*.ddl\" --exclude=\"*\" ./ ${pod}:/tmp -n test"
 		openshiftTag namespace: project, srcStream: microservice, srcTag: 'latest', destinationNamespace: 'test', destinationStream: microservice, destinationTag: 'PrepareForTesting'
 	}
 
