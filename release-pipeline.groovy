@@ -1,6 +1,6 @@
 @NonCPS
 def getImage(String json) {
-	def item = new groovy.json.JsonSlurper().parseText(json).items.find{it.metadata.name == microservice}
+	def item = new groovy.json.JsonSlurper().parseText(json).items.find{it.metadata.name == "project-api"}
 	String image = item.status.dockerImageRepository
 	println image
 	return image
