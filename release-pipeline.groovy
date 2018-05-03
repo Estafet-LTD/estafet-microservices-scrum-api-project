@@ -35,7 +35,7 @@ node() {
 		sh "oc get dc -o json -n test > dc.json"
 		def dc = readFile ('dc.json')
 		if (deploymentConfigurationExists (dc, microservice)) {
-			openshiftDeploy namespace: project, depCfg: ${microservice}, waitTime: "300000"
+			openshiftDeploy namespace: project, depCfg: microservice, waitTime: "300000"
 		} else {
 			openshiftCreateResource namespace:project, jsonyaml:template
 		}
