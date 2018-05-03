@@ -1,14 +1,11 @@
 @NonCPS
-def getImage(microservice) {
-	sh "oc get is -o json -n test > is.json"
-	def json = readFile ('is.json')
+def getImage(json, microservice) {
 	def item = new groovy.json.JsonSlurper().parseText(json).items.find{it.metadata.name == microservice}
 	return item.status.dockerImageRepository
 }
 
-boolean deploymentConfigurationExists(microservice) {
-	sh "oc get dc -o json -n test > dc.json"
-	def json = readFile ('dc.json')
+@NonCPS
+boolean deploymentConfigurationExists(json, microservice) {
 	return new groovy.json.JsonSlurper().parseText(json).items.find{it.metadata.name == microservice} != null
 }
 
@@ -31,14 +28,17 @@ node() {
 	}
 	
 	stage("deploy the test container") {
-		def image = getImage (microservice)
+		sh "oc get is -o json -n test > is.json"
+		def is = readFile ('is.json')
+		def image = getImage json:is, microservice:microservice
 		def template = readFile ('test-deployment-config.json').replaceAll(/\$\{image\}/, image).replaceAll(/\$\{microservice\}/, microservice)
-		if (deploymentConfigurationExists(microservice)) {
+		sh "oc get dc -o json -n test > dc.json"
+		def dc = readFile ('dc.json')
+		if (deploymentConfigurationExists json:dc, microservice:microservice) {
 			openshiftDeploy namespace: project, depCfg: ${microservice}, waitTime: "300000"
 		} else {
 			openshiftCreateResource namespace:project, jsonyaml:template
 		}
-		
 	}
   	  
 	stage("verify test container deployment") {
