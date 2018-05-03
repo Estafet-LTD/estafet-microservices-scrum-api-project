@@ -17,7 +17,7 @@ def nodeNames() {
 def project = "test"
 def microservice = "project-api"
 
-node() {
+node('maven') {
 
 	stage("checkout") {
 		git branch: "master", url: "https://github.com/Estafet-LTD/estafet-microservices-scrum-api-project"
@@ -49,9 +49,21 @@ node() {
 	stage("verify test container deployment") {
 		openshiftVerifyDeployment namespace: project, depCfg: microservice, replicaCount:"1", verifyReplicaCount: "true", waitTime: "500000"	
 	}
+	
+	stage("execute acceptance tests") {
+		cleanWs()
+		build job: "cicd-qa-pipeline" parameters: [
+              new org.jvnet.jenkins.plugins.nodelabelparameter.NodeParameterValue ("TARGET_NODE", "description", env.NODE_NAME)
+          ]
+	}
+	
+	stage("tag container as testing successful") {
+		openshiftTag namespace: project, srcStream: microservice, srcTag: 'PrepareForTesting', destinationNamespace: 'prod', destinationStream: microservice, destinationTag: 'TestingSuccessful'
+	}
 
 }
 
+/*
 node('maven') {
 
 	stage("checkout acceptance tests") {
@@ -70,4 +82,5 @@ node('maven') {
 	}
 
 }
+*/
 
