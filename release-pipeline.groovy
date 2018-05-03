@@ -49,7 +49,15 @@ node() {
 	stage("verify test container deployment") {
 		openshiftVerifyDeployment namespace: project, depCfg: microservice, replicaCount:"1", verifyReplicaCount: "true", waitTime: "500000"	
 	}
-	
+
+}
+
+node('maven') {
+
+	stage("checkout acceptance tests") {
+		git branch: "master", url: "https://github.com/Estafet-LTD/estafet-microservices-scrum-qa"
+	}
+
 	stage("execute acceptance tests") {
 		git branch: "master", url: "https://github.com/Estafet-LTD/estafet-microservices-scrum-qa"
 		sh "mvn clean install"
