@@ -54,6 +54,8 @@ node() {
 
 node('maven') {
 
+	def microservice = "project-api"
+
 	stage("checkout acceptance tests") {
 		git branch: "master", url: "https://github.com/Estafet-LTD/estafet-microservices-scrum-qa"
 	}
