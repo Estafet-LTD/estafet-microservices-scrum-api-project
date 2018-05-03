@@ -14,10 +14,10 @@ def nodeNames() {
  	return jenkins.model.Jenkins.instance.nodes.collect { node -> node.name }
 }
 
-node() {
+def project = "test"
+def microservice = "project-api"
 
-	def project = "test"
-	def microservice = "project-api"
+node() {
 
 	stage("checkout") {
 		git branch: "master", url: "https://github.com/Estafet-LTD/estafet-microservices-scrum-api-project"
@@ -53,8 +53,6 @@ node() {
 }
 
 node('maven') {
-
-	def microservice = "project-api"
 
 	stage("checkout acceptance tests") {
 		git branch: "master", url: "https://github.com/Estafet-LTD/estafet-microservices-scrum-qa"
