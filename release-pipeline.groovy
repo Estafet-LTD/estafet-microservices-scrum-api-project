@@ -9,7 +9,7 @@ def getImage(microservice) {
 boolean deploymentConfigurationExists(microservice) {
 	sh "oc get dc -o json -n test > dc.json"
 	def json = readFile ('dc.json')
-	return new groovy.json.JsonSlurper().parseText(json).items.findAll{it.metadata.name == microservice}.isEmpty() == false
+	return new groovy.json.JsonSlurper().parseText(json).items.find{it.metadata.name == microservice} != null
 }
 
 node() {
