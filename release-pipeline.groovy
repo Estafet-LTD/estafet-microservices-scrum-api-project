@@ -46,7 +46,7 @@ node() {
 	}
 	
 	stage("execute acceptance tests") {
-		build job "qa-pipeline"
+		build job: "qa-pipeline"
 	}
 
 }
