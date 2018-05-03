@@ -46,7 +46,7 @@ node() {
 	}
 	
 	stage("execute acceptance tests") {
-		build job: "cicd-qa-pipeline", wait:true
+		build job: "cicd-qa-pipeline", quietPeriod: 15
 	}
 	
 	stage("tag container as testing successful") {
