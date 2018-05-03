@@ -9,6 +9,11 @@ boolean deploymentConfigurationExists(json, microservice) {
 	return new groovy.json.JsonSlurper().parseText(json).items.find{it.metadata.name == microservice} != null
 }
 
+@NonCPS
+def nodeNames() {
+ 	return jenkins.model.Jenkins.instance.nodes.collect { node -> node.name }
+}
+
 node() {
 
 	def project = "test"
@@ -46,7 +51,10 @@ node() {
 	}
 	
 	stage("execute acceptance tests") {
-		build job: "cicd-qa-pipeline", quietPeriod: 15
+		git branch: "master", url: "https://github.com/Estafet-LTD/estafet-microservices-scrum-qa"
+		sh "mvn clean install"
+		//junit "**/target/surefire-reports/*.xml"	
+		//build job: "cicd-qa-pipeline"
 	}
 	
 	stage("tag container as testing successful") {
