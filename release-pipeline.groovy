@@ -52,9 +52,7 @@ node('maven') {
 	
 	stage("execute acceptance tests") {
 		cleanWs()
-		build job: "cicd-qa-pipeline" parameters: [
-              new org.jvnet.jenkins.plugins.nodelabelparameter.NodeParameterValue ("TARGET_NODE", "description", env.NODE_NAME)
-          ]
+		build job: "cicd-qa-pipeline", parameters: [ new org.jvnet.jenkins.plugins.nodelabelparameter.NodeParameterValue ("TARGET_NODE", "description", env.NODE_NAME)  ]
 	}
 	
 	stage("tag container as testing successful") {
