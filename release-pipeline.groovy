@@ -30,7 +30,7 @@ node() {
 	stage("deploy the test container") {
 		sh "oc get is -o json -n test > is.json"
 		def is = readFile ('is.json')
-		def image = getImage json:is, microservice:microservice
+		def image = getImage (json:is, microservice:microservice)
 		def template = readFile ('test-deployment-config.json').replaceAll(/\$\{image\}/, image).replaceAll(/\$\{microservice\}/, microservice)
 		sh "oc get dc -o json -n test > dc.json"
 		def dc = readFile ('dc.json')
