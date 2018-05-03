@@ -35,7 +35,7 @@ node() {
 		sh "oc get dc -o json -n test > dc.json"
 		def dc = readFile ('dc.json')
 		if (deploymentConfigurationExists (dc, microservice)) {
-			openshiftDeploy namespace: project, depCfg: microservice, waitTime: "300000"
+			openshiftDeploy namespace: project, depCfg: microservice
 		} else {
 			openshiftCreateResource namespace:project, jsonyaml:template
 		}
@@ -46,7 +46,7 @@ node() {
 	}
 	
 	stage("execute acceptance tests") {
-		build job: "cicd-qa-pipeline"
+		build job: "cicd-qa-pipeline", wait:30
 	}
 	
 	stage("tag container as testing successful") {
