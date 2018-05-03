@@ -48,6 +48,10 @@ node() {
 	stage("execute acceptance tests") {
 		build job: "cicd-qa-pipeline"
 	}
+	
+	stage("tag container as testing successful") {
+		openshiftTag namespace: project, srcStream: microservice, srcTag: 'PrepareForTesting', destinationNamespace: 'prod', destinationStream: microservice, destinationTag: 'TestingSuccessful'
+	}
 
 }
 
