@@ -44,6 +44,10 @@ node() {
 	stage("verify test container deployment") {
 		openshiftVerifyDeployment namespace: project, depCfg: microservice, replicaCount:"1", verifyReplicaCount: "true", waitTime: "300000"	
 	}
+	
+	stage("execute acceptance tests") {
+		build job "qa-pipeline"
+	}
 
 }
 
