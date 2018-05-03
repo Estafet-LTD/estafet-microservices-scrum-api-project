@@ -47,7 +47,6 @@ node() {
 	
 	stage("execute acceptance tests") {
 		build job: "../cicd-qa-pipeline"
-"
 	}
 
 }
