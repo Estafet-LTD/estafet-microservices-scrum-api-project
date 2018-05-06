@@ -1,4 +1,4 @@
-package com.estafet.microservices.api.project;
+package com.estafet.microservices.api.project.container.tests;
 
 import static org.junit.Assert.*;
 
