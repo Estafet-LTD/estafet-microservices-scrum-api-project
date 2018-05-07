@@ -30,18 +30,21 @@ node("maven") {
 	}
 
 	stage("container tests") {
-		withEnv(
-			[	"PROJECT_API_JDBC_URL=jdbc:postgresql://postgresql.${project}.svc:5432/${microservice}", 
-				"PROJECT_API_DB_USER=postgres", 
-				"PROJECT_API_DB_PASSWORD=welcome1",
-				"PROJECT_API_SERVICE_URI=http://${microservice}.${project}.svc:8080",
-				"JBOSS_A_MQ_BROKER_URL=tcp://broker-amq-tcp.${project}.svc:61616",
-				"JBOSS_A_MQ_BROKER_USER=amq",
-				"JBOSS_A_MQ_BROKER_PASSWORD=amq"
-			]) {
-				sh "mvn verify -P integration-test"
+		try {
+			withEnv(
+				[	"PROJECT_API_JDBC_URL=jdbc:postgresql://postgresql.${project}.svc:5432/${microservice}", 
+					"PROJECT_API_DB_USER=postgres", 
+					"PROJECT_API_DB_PASSWORD=welcome1",
+					"PROJECT_API_SERVICE_URI=http://${microservice}.${project}.svc:8080",
+					"JBOSS_A_MQ_BROKER_URL=tcp://broker-amq-tcp.${project}.svc:61616",
+					"JBOSS_A_MQ_BROKER_USER=amq",
+					"JBOSS_A_MQ_BROKER_PASSWORD=amq"
+				]) {
+					sh "mvn verify -P integration-test"
+				}
+			} finally {
+				junit "**/target/failsafe-reports/*.xml"
 			}
-			junit "**/target/failsafe-reports/*.xml"
 	}
 	
 	stage("tag container for testing") {
