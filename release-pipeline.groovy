@@ -9,11 +9,6 @@ boolean deploymentConfigurationExists(json, microservice) {
 	return new groovy.json.JsonSlurper().parseText(json).items.find{it.metadata.name == microservice} != null
 }
 
-@NonCPS
-def nodeNames() {
- 	return jenkins.model.Jenkins.instance.nodes.collect { node -> node.name }
-}
-
 def project = "test"
 def microservice = "project-api"
 
