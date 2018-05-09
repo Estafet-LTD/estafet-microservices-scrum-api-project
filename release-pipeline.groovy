@@ -39,30 +39,23 @@ node {
 		} else {
 			openshiftCreateResource namespace:project, jsonyaml:template
 		}
+		openshiftVerifyDeployment namespace: project, depCfg: microservice, replicaCount:"1", verifyReplicaCount: "true", waitTime: "600000"
 	}
   	  
-	stage("verify test container deployment") {
-		openshiftVerifyDeployment namespace: project, depCfg: microservice, replicaCount:"1", verifyReplicaCount: "true", waitTime: "500000"	
+	stage("acceptance tests") {
+		try {
+			build job: "cicd-qa-pipeline"
+		} catch (Exception e) {
+			sleep time: 20
+		}
+		openshiftVerifyBuild namespace: "cicd", bldCfg: "cicd-qa-pipeline", waitTime: "600000"
 	}
-
-}
-
-node('maven') {
-
-	stage("checkout acceptance tests") {
-		git branch: "master", url: "https://github.com/Estafet-LTD/estafet-microservices-scrum-qa"
-	}
-
-	stage("execute acceptance tests") {
-		git branch: "master", url: "https://github.com/Estafet-LTD/estafet-microservices-scrum-qa"
-		sh "mvn clean install"
-		//junit "**/target/surefire-reports/*.xml"	
-		//build job: "cicd-qa-pipeline"
-	}
-	
+		
 	stage("tag container as testing successful") {
 		openshiftTag namespace: project, srcStream: microservice, srcTag: 'PrepareForTesting', destinationNamespace: 'prod', destinationStream: microservice, destinationTag: 'TestingSuccessful'
 	}
 
 }
+
+
 
