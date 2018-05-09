@@ -18,7 +18,7 @@ node {
 		git branch: "master", url: "https://github.com/Estafet-LTD/estafet-microservices-scrum-api-project"
 	}
 
-	stage("update the test database schema") {
+	stage("update database") {
 		sh "oc get pods --selector app=postgresql -o json -n ${project} > pods.json"
 		def json = readFile('pods.json');
 		def pod = new groovy.json.JsonSlurper().parseText(json).items[0].metadata.name
@@ -27,7 +27,7 @@ node {
 		sh "oc exec ${pod}  -n ${project} -- /bin/sh -i -c \"psql -d ${microservice} -U postgres -f /tmp/create-${microservice}-db.ddl\""
 	}
 	
-	stage("deploy the test container") {
+	stage("deploy container") {
 		sh "oc get is -o json -n test > is.json"
 		def is = readFile ('is.json')
 		def image = getImage (is, microservice)
@@ -42,7 +42,7 @@ node {
 		openshiftVerifyDeployment namespace: project, depCfg: microservice, replicaCount:"1", verifyReplicaCount: "true", waitTime: "600000"
 	}
   	  
-	stage("acceptance tests") {
+	stage("run acceptance tests") {
 		try {
 			build job: "cicd-qa-pipeline"
 		} catch (Exception e) {
@@ -51,7 +51,7 @@ node {
 		openshiftVerifyBuild namespace: "cicd", bldCfg: "cicd-qa-pipeline", waitTime: "600000"
 	}
 		
-	stage("tag container as testing successful") {
+	stage("tag container as 'TestingSuccessful'") {
 		openshiftTag namespace: project, srcStream: microservice, srcTag: 'PrepareForTesting', destinationNamespace: 'prod', destinationStream: microservice, destinationTag: 'TestingSuccessful'
 	}
 
