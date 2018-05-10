@@ -20,7 +20,7 @@ node {
 
 	stage("update database") {
 		sh "oc get pods --selector app=postgresql -o json -n ${project} > pods.json"
-		def json = readFile('pods.json');
+		def json = readFile('pods.json')
 		def pod = new groovy.json.JsonSlurper().parseText(json).items[0].metadata.name
 		sh "oc rsync --no-perms=true --include=\"*.ddl\" --exclude=\"*\" ./ ${pod}:/tmp -n ${project}"	
 		sh "oc exec ${pod}  -n ${project} -- /bin/sh -i -c \"psql -d ${microservice} -U postgres -f /tmp/drop-${microservice}-db.ddl\""
@@ -28,8 +28,8 @@ node {
 	}
 	
 	stage("deploy container") {
-		sh "oc get is -o json -n ${project} > is.json"
-		def is = readFile "is.json"
+		sh "oc get is -o json -n ${project} > istream.json"
+		def is = readFile('istream.json')
 		def image = getImage (is, microservice)
 		def template = readFile ('test-deployment-config.json').replaceAll(/\$\{image\}/, image).replaceAll(/\$\{microservice\}/, microservice)
 		sh "oc get dc -o json -n test > dc.json"
