@@ -41,14 +41,6 @@ node {
 		}
 		openshiftVerifyDeployment namespace: project, depCfg: microservice, replicaCount:"1", verifyReplicaCount: "true", waitTime: "600000"
 	}
-  	  
-	stage("run acceptance tests") {
-		build job: "cicd-qa-pipeline", propagate: true, wait: true
-	}
-		
-	stage("tag container as 'TestingSuccessful'") {
-		openshiftTag namespace: project, srcStream: microservice, srcTag: 'PrepareForTesting', destinationNamespace: 'prod', destinationStream: microservice, destinationTag: 'TestingSuccessful'
-	}
 
 }
 
