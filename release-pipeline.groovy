@@ -52,5 +52,25 @@ node {
 
 }
 
+node('maven') {
+
+	stage("checkout acceptance tests") {
+		git branch: "master", url: "https://github.com/Estafet-LTD/estafet-microservices-scrum-qa"
+	}
+
+	stage("execute acceptance tests") {
+		try {
+			sh "mvn clean install"
+		} finally {
+			junit "**/target/surefire-reports/*.xml"
+		}	
+	}
+	
+	stage("tag container as testing successful") {
+		openshiftTag namespace: project, srcStream: microservice, srcTag: 'PrepareForTesting', destinationNamespace: 'prod', destinationStream: microservice, destinationTag: 'TestingSuccessful'
+	}
+
+}
+
 
 
