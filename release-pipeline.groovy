@@ -43,12 +43,7 @@ node {
 	}
   	  
 	stage("run acceptance tests") {
-		try {
-			build job: "cicd-qa-pipeline"
-		} catch (Exception e) {
-			sleep time: 20
-		}
-		openshiftVerifyBuild namespace: "cicd", bldCfg: "cicd-qa-pipeline", waitTime: "600000"
+		build job: "cicd-qa-pipeline", propagate: true, wait: true
 	}
 		
 	stage("tag container as 'TestingSuccessful'") {
