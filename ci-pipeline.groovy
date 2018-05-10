@@ -3,7 +3,7 @@ node("maven") {
 	def project = "dev"
 	def microservice = "project-api"
 
-	currentBuild.description = "The build pipeline for ${microservice}. The objective is to build a container from the source and to execute unit and container integration tests before promoting the container as a release candidate for acceptance testing"
+	currentBuild.description = "Build a container from the source, then execute unit and container integration tests before promoting the container as a release candidate for acceptance testing."
 
 	stage("checkout") {
 		git branch: "master", url: "https://github.com/Estafet-LTD/estafet-microservices-scrum-api-project"
