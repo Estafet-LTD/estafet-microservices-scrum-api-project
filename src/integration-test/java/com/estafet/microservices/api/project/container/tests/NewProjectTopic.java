@@ -29,8 +29,8 @@ public class NewProjectTopic {
 		connection.close();
 	}
 
-	public String consumeMessage(int timeout) throws JMSException {
-		Message message = messageConsumer.receive(timeout);
+	public String consumeMessage() throws JMSException {
+		Message message = messageConsumer.receive(3000);
 		return ((TextMessage) message).getText();
 	}
 }

@@ -85,7 +85,7 @@ public class ITProjectTest {
 			.body("noSprints", is(5))
 			.body("sprintLengthDays", is(5));
 		
-		Project project = new ObjectMapper().readValue(topic.consumeMessage(3000), Project.class);
+		Project project = new ObjectMapper().readValue(topic.consumeMessage(), Project.class);
 		assertThat(project.getId(), is(1));
 		assertThat(project.getTitle(), is("My Project #1"));
 		assertThat(project.getNoSprints(), is(5));
