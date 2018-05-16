@@ -27,7 +27,7 @@ def microservice = "project-api"
 def developmentVersion
 def releaseVersion
 
-node {
+node('maven') {
 
 	stage("checkout") {
 		git branch: "master", url: "https://${username()}:${password()}@github.com/Estafet-LTD/estafet-microservices-scrum-api-project"
