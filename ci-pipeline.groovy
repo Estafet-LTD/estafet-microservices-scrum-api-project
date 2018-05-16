@@ -10,11 +10,9 @@ node("maven") {
 	}
 
 	stage("unit tests") {
-		try {
-			sh "mvn clean test"
-		} finally {
-			junit "**/target/surefire-reports/*.xml"
-		}
+		withMaven(mavenSettingsConfig: 'microservices-scrum') {
+	      sh "mvn clean test"
+	    } 
 	}
 
 	stage("update database") {
@@ -34,11 +32,11 @@ node("maven") {
 	stage("build & deploy container") {
 		openshiftBuild namespace: project, buildConfig: microservice, showBuildLogs: "true",  waitTime: "300000"
 		sh "oc set env dc/${microservice} JBOSS_A_MQ_BROKER_URL=tcp://broker-amq-tcp.${project}.svc:61616 -n ${project}"
-		openshiftVerifyDeployment namespace: project, depCfg: microservice, replicaCount:"1", verifyReplicaCount: "true", waitTime: "600000"
+		openshiftVerifyDeployment namespace: project, depCfg: microservice, replicaCount:"1", verifyReplicaCount: "true", waitTime: "300000"
+		sleep time:90 
 	}
 
-	stage("container tests") {
-		try {
+	stage("execute the container tests") {
 			withEnv(
 				[	"PROJECT_API_JDBC_URL=jdbc:postgresql://postgresql.${project}.svc:5432/${microservice}", 
 					"PROJECT_API_DB_USER=postgres", 
@@ -48,12 +46,14 @@ node("maven") {
 					"JBOSS_A_MQ_BROKER_USER=amq",
 					"JBOSS_A_MQ_BROKER_PASSWORD=amq"
 				]) {
-					sh "mvn verify -P integration-test"
-				}
-			} finally {
-				sh "oc set env dc/${microservice} JBOSS_A_MQ_BROKER_URL=tcp://localhost:61616 -n ${project}"
-				junit "**/target/failsafe-reports/*.xml"
+			withMaven(mavenSettingsConfig: 'microservices-scrum') {
+					try {
+						sh "mvn clean verify -P integration-test"
+					} finally {
+						sh "oc set env dc/${microservice} JBOSS_A_MQ_BROKER_URL=tcp://localhost:61616 -n ${project}"
+					}
 			}
+		}
 	}
 	
 	stage("tag container for testing") {
