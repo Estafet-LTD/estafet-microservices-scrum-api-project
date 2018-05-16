@@ -75,12 +75,12 @@ public class ITProjectTest {
 			.post("/project")
 		.then()
 			.statusCode(HttpURLConnection.HTTP_OK)
-			.body("id", is(2000))
+			.body("id", is(1))
 			.body("title", equalTo("My Project #1"));
 		
 		get("/project/1").then()
 			.statusCode(HttpURLConnection.HTTP_OK)
-			.body("id", is(2000))
+			.body("id", is(1))
 			.body("title", is("My Project #1"))
 			.body("noSprints", is(5))
 			.body("sprintLengthDays", is(5));
