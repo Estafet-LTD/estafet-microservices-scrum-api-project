@@ -75,7 +75,7 @@ public class ITProjectTest {
 			.post("/project")
 		.then()
 			.statusCode(HttpURLConnection.HTTP_OK)
-			.body("id", is(1))
+			.body("id", is(2000))
 			.body("title", equalTo("My Project #1"));
 		
 		get("/project/1").then()
