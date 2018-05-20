@@ -11,6 +11,8 @@
 
 - name: fetch latest tags for this repo
   shell: "git describe --abbrev=0 --tags"
+  args:
+    chdir: "{{ workdir }}/{{ repo }}"
   when: "{{ test_environment }}"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
