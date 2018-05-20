@@ -19,7 +19,7 @@
     - git  
 
 - name: fetch all of the tags for this repo
-  shell: "git describe --tags `git rev-list --tags --max-count=1`"
+  shell: 'git describe --tags `git rev-list --tags --max-count=1`'
   when: "{{ test_environment }}"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
