@@ -9,29 +9,8 @@
 
 - set_fact: branch="master"
 
-- name: fetch all of the tags for this repo
-  shell: "git fetch --tags"
-  when: "{{ test_environment }}"
-  register: command_result
-  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
-  changed_when: "'exists' not in command_result.stderr"
-  tags:
-    - git  
-
-- name: get the commit reference
-  shell: "git rev-list --tags --max-count=1"
-  when: "{{ test_environment }}"
-  register: command_result
-  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
-  changed_when: "'exists' not in command_result.stderr"
-  tags:
-    - git  
-
-- set_fact: commit_reference="{{ command_result.stdout }}"
-  when: "{{ test_environment }}"
-
-- name: fetch all of the tags for this repo
-  shell: "git describe --tags {{ commit_reference }}"
+- name: fetch latest tags for this repo
+  shell: "git describe --abbrev=0 --tags"
   when: "{{ test_environment }}"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
