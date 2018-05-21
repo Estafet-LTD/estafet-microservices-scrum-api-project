@@ -83,6 +83,8 @@ node('maven') {
 		} else {
 			openshiftCreateResource namespace:project, jsonyaml:template
 		}
+		template = readFile ('test-service-config.yaml').replaceAll(/\$\{microservice\}/, microservice)
+		openshiftCreateResource namespace:project, jsonyaml:template
 		openshiftVerifyDeployment namespace: project, depCfg: microservice, replicaCount:"1", verifyReplicaCount: "true", waitTime: "600000"
 	}	
 	
