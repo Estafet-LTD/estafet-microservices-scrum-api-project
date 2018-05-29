@@ -84,10 +84,10 @@
 						],
 						"readinessProbe": {
 							"failureThreshold": "10",
-							"initialDelaySeconds": "90",
-							"periodSeconds": "10",
+							"initialDelaySeconds": "180",
+							"periodSeconds": "30",
 							"successThreshold": "1",
-							"timeoutSeconds": "2",
+							"timeoutSeconds": "1",
 							"httpGet": {
 								"path": "/api",
 								"port": 8080,
