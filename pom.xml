@@ -1,9 +1,11 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.estafet.microservices.scrum</groupId>
 	<artifactId>microservices-scrum-project-api</artifactId>
 	<version>0.0.9-SNAPSHOT</version>
-	
+
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
@@ -69,8 +71,34 @@
 					</plugin>
 				</plugins>
 			</build>
-		</profile>		
-	</profiles>	
+		</profile>
+		<profile>
+			<id>production</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.liquibase</groupId>
+						<artifactId>liquibase-maven-plugin</artifactId>
+						<version>3.6.1</version>
+						<configuration>
+							<driver>org.postgresql.Driver</driver>
+							<url>${env.PROJECT_API_JDBC_URL}</url>
+							<username>${env.PROJECT_API_DB_USER}</username>
+							<password>${env.PROJECT_API_DB_PASSWORD</password>
+							<changeLogFile>db-changelog.xml</changeLogFile>
+						</configuration>
+						<executions>
+							<execution>
+								<goals>
+									<goal>update</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 	<build>
 		<resources>
@@ -81,31 +109,50 @@
 		</resources>
 		<plugins>
 			<plugin>
-			   <groupId>org.apache.maven.plugins</groupId>
-			   <artifactId>maven-deploy-plugin</artifactId>
-			   <configuration>
-			      <skip>true</skip>
-			   </configuration>
-			</plugin>		
+				<groupId>org.liquibase</groupId>
+				<artifactId>liquibase-maven-plugin</artifactId>
+				<version>3.6.1</version>
+				<configuration>
+					<driver>org.postgresql.Driver</driver>
+					<url>jdbc:postgresql://localhost:5432/${microservice}</url>
+					<username>postgres</username>
+					<password>welcome1</password>
+					<outputChangeLogFile>db-changelog.xml</outputChangeLogFile>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>generateChangeLog</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
-			   <groupId>org.sonatype.plugins</groupId>
-			   <artifactId>nexus-staging-maven-plugin</artifactId>
-			   <version>1.5.1</version>
-			   <executions>
-			      <execution>
-			         <id>default-deploy</id>
-			         <phase>deploy</phase>
-			         <goals>
-			            <goal>deploy</goal>
-			         </goals>
-			      </execution>
-			   </executions>
-			   <configuration>
-			      <serverId>nexus</serverId>
-			      <nexusUrl>http://nexus.cicd.svc:8081/nexus/</nexusUrl>
-			      <skipStaging>true</skipStaging>
-			   </configuration>
-			</plugin>					
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.sonatype.plugins</groupId>
+				<artifactId>nexus-staging-maven-plugin</artifactId>
+				<version>1.5.1</version>
+				<executions>
+					<execution>
+						<id>default-deploy</id>
+						<phase>deploy</phase>
+						<goals>
+							<goal>deploy</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<serverId>nexus</serverId>
+					<nexusUrl>http://nexus.cicd.svc:8081/nexus/</nexusUrl>
+					<skipStaging>true</skipStaging>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
@@ -124,8 +171,10 @@
 						<phase>verify</phase>
 						<configuration>
 							<target>
-								<replace file="${basedir}/target/classes/generate-ddl-application-context.xml">
-									<replacefilter token="#microservice#" value="${microservice}" />
+								<replace
+									file="${basedir}/target/classes/generate-ddl-application-context.xml">
+									<replacefilter token="#microservice#"
+										value="${microservice}" />
 								</replace>
 							</target>
 						</configuration>
@@ -275,7 +324,7 @@
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 			<scope>runtime</scope>
-		</dependency>		
+		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -326,7 +375,7 @@
 	<scm>
 		<connection>scm:git:https://github.com/Estafet-LTD/estafet-microservices-scrum-api-project.git</connection>
 		<developerConnection>scm:git:https://github.com/Estafet-LTD/estafet-microservices-scrum-api-project.git</developerConnection>
-	  <tag>HEAD</tag>
-  </scm>
+		<tag>HEAD</tag>
+	</scm>
 
 </project>

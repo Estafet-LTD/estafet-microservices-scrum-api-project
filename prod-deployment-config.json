@@ -2,22 +2,42 @@
 	"kind": "DeploymentConfig",
 	"metadata": {
 		"labels": {
-			"app": "${microservice}"
+			"app": "project-api"
 		},
-		"name": "${microservice}"
+		"name": "project-api"
 	},
 	"spec": {
+		"strategy": {
+			"type": "Recreate",
+			"recreateParams": {
+				"timeoutSeconds": 60,
+				"pre": {
+					"failurePolicy": "Ignore",
+					"execNewPod": {
+						"command": [
+							"sh",
+							"-c",
+							"cd /deployments \u0026\u0026 ./liquibase --defaultSchemaName=public --url=jdbc:postgresql://${POSTGRESQL_SERVICE_HOST:-127.0.0.1}:5432/test --driver=org.postgresql.Driver update -Dauthor=mike -Dschema=MY_SCHEMA"
+						],
+						"containerName": "project-api"
+					}
+				}
+			},
+			"resources": {
+				
+			}
+		},
 		"replicas": "1",
 		"revisionHistoryLimit": "10",
 		"selector": {
-			"app": "${microservice}",
-			"deploymentconfig": "${microservice}"
+			"app": "project-api",
+			"deploymentconfig": "project-api"
 		},
 		"template": {
 			"metadata": {
 				"labels": {
-					"app": "${microservice}",
-					"deploymentconfig": "${microservice}"
+					"app": "project-api",
+					"deploymentconfig": "project-api"
 				}
 			},
 			"spec": {
@@ -46,7 +66,7 @@
 							},
 							{
 								"name": "PROJECT_API_JDBC_URL",
-								"value": "jdbc:postgresql://postgresql.test.svc:5432/project-api"
+								"value": "jdbc:postgresql://postgresql.prod.svc:5432/project-api"
 							},
 							{
 								"name": "JAEGER_SAMPLER_TYPE",
@@ -58,16 +78,16 @@
 							},
 							{
 								"name": "JAEGER_SAMPLER_MANAGER_HOST_PORT",
-								"value": "jaeger-agent.test.svc:5778"
+								"value": "jaeger-agent.prod.svc:5778"
 							},
 							{
 								"name": "JAEGER_AGENT_HOST",
-								"value": "jaeger-agent.test.svc"
+								"value": "jaeger-agent.prod.svc"
 							}
 						],
-						"name": "${microservice}",
+						"name": "project-api",
 						"imagePullPolicy": "Always",
-						"image": "${image}:PrepareForTesting",
+						"image": "${IMAGE_STREAM}",
 						"ports": [
 							{
 								"containerPort": "8080",
