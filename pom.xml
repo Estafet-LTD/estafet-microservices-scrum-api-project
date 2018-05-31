@@ -88,6 +88,25 @@
 				<version>3.6.1</version>
 				<configuration>
 					<driver>org.postgresql.Driver</driver>
+					<url>${env.PROJECT_API_JDBC_URL}</url>
+					<username>${env.PROJECT_API_DB_USER}</username>
+					<password>${env.PROJECT_API_DB_PASSWORD}</password>
+					<changeLogFile>liquibase/db-changelog-master.xml</changeLogFile>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>update</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>		
+			<plugin>
+				<groupId>org.liquibase</groupId>
+				<artifactId>liquibase-maven-plugin</artifactId>
+				<version>3.6.1</version>
+				<configuration>
+					<driver>org.postgresql.Driver</driver>
 					<url>jdbc:postgresql://localhost:5432/${microservice}</url>
 					<username>postgres</username>
 					<password>welcome1</password>
@@ -110,7 +129,7 @@
 					<url>jdbc:postgresql://localhost:5432/${microservice}</url>
 					<username>postgres</username>
 					<password>welcome1</password>
-					<changeLogFile>db-changelog-master.xml</changeLogFile>
+					<changeLogFile>liquibase/db-changelog-master.xml</changeLogFile>
 					<diffChangeLogFile>liquibase/liquibase-diff-changeLog.xml</diffChangeLogFile>
 					<referenceUrl>hibernate:spring:com.estafet.microservices.api.project.model?dialect=org.hibernate.dialect.PostgreSQLDialect</referenceUrl>
 				</configuration>
