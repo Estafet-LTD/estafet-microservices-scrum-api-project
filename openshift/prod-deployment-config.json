@@ -87,7 +87,7 @@
 						],
 						"name": "project-api",
 						"imagePullPolicy": "Always",
-						"image": "project-api:latest",
+						"image": "172.30.1.1:5000/prod/project-api:latest",
 						"ports": [
 							{
 								"containerPort": "8080",
