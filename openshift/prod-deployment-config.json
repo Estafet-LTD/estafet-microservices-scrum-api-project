@@ -18,7 +18,7 @@
 						"command": [
 							"sh",
 							"-c",
-							"cd /tmp/src \u0026\u0026 /opt/rh/rh-maven33/root/usr/share/maven/bin/mvn resources:resources liquibase:update -Dmaven.repo.local=/home/jboss/m2 -P db -s /tmp/artifacts/configuration/settings.xml"
+							"java -jar /tmp/artifacts/m2/org/liquibase/liquibase-core/3.5.3/liquibase-core-3.5.3.jar update --changeLogFile=/tmp/src/src/main/resources/db-changelogs/db-changelog-master.xml --username=postgres --password=welcome1 --url=jdbc:postgresql://localhost:5432/project-api --driver=org.postgresql.Driver"
 						],
 						"containerName": "project-api"
 					}
