@@ -18,7 +18,7 @@
 						"command": [
 							"sh",
 							"-c",
-							"java -jar /tmp/artifacts/m2/org/liquibase/liquibase-core/3.5.3/liquibase-core-3.5.3.jar update --changeLogFile=/tmp/src/src/main/resources/db-changelogs/db-changelog-master.xml --username=postgres --password=welcome1 --url=jdbc:postgresql://localhost:5432/project-api --driver=org.postgresql.Driver"
+							"java -jar /tmp/artifacts/m2/org/liquibase/liquibase-core/3.5.3/liquibase-core-3.5.3.jar --changeLogFile=/tmp/src/src/main/resources/db-changelogs/db-changelog-master.xml --username=postgres --password=welcome1 --url=jdbc:postgresql://localhost:5432/project-api --driver=org.postgresql.Driver update"
 						],
 						"containerName": "project-api"
 					}
