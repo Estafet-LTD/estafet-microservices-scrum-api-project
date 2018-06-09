@@ -77,7 +77,8 @@ public class ITProjectTest {
 			.then()
 				.statusCode(HttpURLConnection.HTTP_OK)
 				.body("title", equalTo("My Project #1"))
-				.extract().path("id");
+			.extract()
+				.path("id");
 		
 		get("/project/" + id).then()
 			.statusCode(HttpURLConnection.HTTP_OK)
