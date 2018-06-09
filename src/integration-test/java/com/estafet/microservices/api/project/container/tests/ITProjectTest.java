@@ -69,24 +69,25 @@ public class ITProjectTest {
 	@Test
 	@DatabaseSetup("ITProjectTest-data.xml")
 	public void testCreateProject() throws Exception {
-		given().contentType(ContentType.JSON)
-			.body("{\"title\":\"My Project #1\",\"noSprints\":5,\"sprintLengthDays\":5}")
-		.when()
-			.post("/project")
-		.then()
-			.statusCode(HttpURLConnection.HTTP_OK)
-			.body("id", is(1))
-			.body("title", equalTo("My Project #1"));
+		String id = 
+			given().contentType(ContentType.JSON)
+				.body("{\"title\":\"My Project #1\",\"noSprints\":5,\"sprintLengthDays\":5}")
+			.when()
+				.post("/project")
+			.then()
+				.statusCode(HttpURLConnection.HTTP_OK)
+				.body("title", equalTo("My Project #1"))
+				.extract().path("id");
 		
-		get("/project/1").then()
+		get("/project/" + id).then()
 			.statusCode(HttpURLConnection.HTTP_OK)
-			.body("id", is(1))
+			.body("id", is(id))
 			.body("title", is("My Project #1"))
 			.body("noSprints", is(5))
 			.body("sprintLengthDays", is(5));
 		
 		Project project = new ObjectMapper().readValue(topic.consumeMessage(), Project.class);
-		assertThat(project.getId(), is(1));
+		assertThat(project.getId(), is(id));
 		assertThat(project.getTitle(), is("My Project #1"));
 		assertThat(project.getNoSprints(), is(5));
 		assertThat(project.getSprintLengthDays(), is(5));
