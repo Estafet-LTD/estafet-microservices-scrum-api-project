@@ -69,7 +69,7 @@ public class ITProjectTest {
 	@Test
 	@DatabaseSetup("ITProjectTest-data.xml")
 	public void testCreateProject() throws Exception {
-		String id = 
+		Integer id = 
 			given().contentType(ContentType.JSON)
 				.body("{\"title\":\"My Project #1\",\"noSprints\":5,\"sprintLengthDays\":5}")
 			.when()
