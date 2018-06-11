@@ -28,13 +28,13 @@ You can find a detailed explanation of how to install this (and other microservi
 To retrieve an example the project object (useful for testing to see the microservice is online).
 
 ```
-GET http://project-api/project
+GET http://<project-api-uri>/api
 ```
 
 To retrieve a project with id = 4
 
 ```
-GET http://project-api/project/4
+GET http://<project-api-uri>/project/4
 ```
 
 To retrieve all of the projects
@@ -46,7 +46,7 @@ GET http://project-api/projects
 To create a new project
 
 ```
-POST http://project-api/project
+POST http://<project-api-uri>/project
 {
 	"title" : "this is my project"
 }
@@ -55,14 +55,14 @@ POST http://project-api/project
 To change the title of a project
 
 ```
-PUT http://project-api/project/title
+PUT http://<project-api-uri>/project/title
 "change title"
 ```
 
 To delete a project with id = 1
 
 ```
-DELETE http://project-api/project/1
+DELETE http://<project-api-uri>/project/1
 ```
 
 ## Environment Variables
