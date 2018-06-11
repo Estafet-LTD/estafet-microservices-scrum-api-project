@@ -10,9 +10,9 @@ You can find a detailed explanation of how to install this (and other microservi
 
 ### Messaging
 
-|Topic   |Event    |Message Type |
+|Topic   |Direction|Event |Message Type |
 |--------|---------|-------------|
-|new.project.topic|When a new project is created it is published to this topic|Project JSON Object|
+|new.project.topic|Producer|When a new project is created it is published to this topic|Project JSON Object|
 
 ### Project JSON object
 
