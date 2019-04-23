@@ -49,7 +49,7 @@
 							},
 							{
 								"name": "PROJECT_API_JDBC_URL",
-								"value": "jdbc:postgresql://postgresql.test.svc:5432/project-api"
+								"value": "jdbc:postgresql://postgresql.test.svc:5432/test-project-api"
 							},
 							{
 								"name": "JAEGER_SAMPLER_TYPE",

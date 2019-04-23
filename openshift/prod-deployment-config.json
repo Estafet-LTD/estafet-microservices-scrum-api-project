@@ -50,7 +50,7 @@
 							},
 							{
 								"name": "PROJECT_API_JDBC_URL",
-								"value": "jdbc:postgresql://postgresql.prod.svc:5432/project-api"
+								"value": "jdbc:postgresql://postgresql.prod.svc:5432/prod-project-api"
 							},
 							{
 								"name": "JAEGER_SAMPLER_TYPE",
