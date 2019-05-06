@@ -71,7 +71,7 @@
 						],
 						"name": "project-api",
 						"imagePullPolicy": "Always",
-						"image": "172.30.1.1:5000/prod/project-api:latest",
+						"image": "docker-registry.default.svc:5000/prod/project-api:latest",
 						"ports": [
 							{
 								"containerPort": "8080",
