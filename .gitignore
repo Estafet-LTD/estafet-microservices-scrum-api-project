@@ -9,3 +9,4 @@
 /release-pipeline.groovy.bak
 /createdb.sh
 /prod-deployment-config.json.bak
+/openshift/pipelines/build-pipeline.groovy.bak
