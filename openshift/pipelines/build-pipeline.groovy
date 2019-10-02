@@ -22,7 +22,6 @@ node("maven") {
 	}
 	
 	stage("prepare the database") {
-		Class.forName("org.postgresql.Driver")
 		def props = [user: "postgres", password: "welcome1", allowMultiQueries: 'true'] as Properties
     def url = "jdbc:postgresql://postgresql.${project}.svc:5432/${project}-${microservice}"
     def driver = "org.postgresql.Driver"
