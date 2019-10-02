@@ -1,6 +1,3 @@
-@GrabConfig(systemClassLoader=true)
-@Grab(group='org.postgresql', module='postgresql', version='9.4-1205-jdbc42')
-
 node("maven") {
 
 	def project = "build"
