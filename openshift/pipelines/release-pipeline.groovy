@@ -30,8 +30,14 @@ def releaseTag
 
 node('maven') {
 
+	properties([
+	  parameters([
+	     string(name: 'GITHUB'),
+	  ])
+	])
+
 	stage("checkout") {
-		git branch: "master", url: "https://${username()}:${password()}@github.com/Estafet-LTD/estafet-microservices-scrum-api-project"
+		git branch: "master", url: "https://${username()}:${password()}@github.com/${params.GITHUB}/estafet-microservices-scrum-api-project"
 	}
 	
 	stage("deploy container") {
