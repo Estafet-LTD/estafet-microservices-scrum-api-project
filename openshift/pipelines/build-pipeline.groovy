@@ -23,7 +23,7 @@ node("maven") {
 	
 	stage("prepare the database") {
 
-		this.class.classLoader.rootLoader.addURL(new URL("target/postgresql.jar"));
+		this.class.classLoader.rootLoader.addURL(new URL("/tmp/workspace/cicd/cicd-build-project-api/target/postgresql.jar"));
 
 		Class.forName("org.postgresql.Driver")
 		def props = [user: "postgres", password: "welcome1", allowMultiQueries: 'true'] as Properties
