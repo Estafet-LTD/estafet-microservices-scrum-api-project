@@ -55,37 +55,6 @@
 		</profile>
 	</profiles>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>copy</id>
-						<phase>test</phase>
-						<goals>
-							<goal>copy</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<artifactItems>
-						<artifactItem>
-							<groupId>org.postgresql</groupId>
-							<artifactId>postgresql</artifactId>
-							<version>9.4.1212.jre7</version>
-							<type>jar</type>
-							<overWrite>false</overWrite>
-							<outputDirectory>${project.basedir}/target</outputDirectory>
-							<destFileName>postgresql.jar</destFileName>
-						</artifactItem>
-					</artifactItems>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
-
 	<distributionManagement>
 		<snapshotRepository>
 			<id>nexus-snapshots</id>
