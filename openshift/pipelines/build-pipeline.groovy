@@ -22,6 +22,10 @@ node("maven") {
 	}
 	
 	stage("prepare the database") {
+		
+		def localFile = new File("target/postgresql.jar");
+		this.class.classLoader.rootLoader.addURL(localFile.toURI().toURL());
+
 		Class.forName("org.postgresql.Driver")
 		def props = [user: "postgres", password: "welcome1", allowMultiQueries: 'true'] as Properties
     def url = "jdbc:postgresql://postgresql.${project}.svc:5432/${project}-${microservice}"
