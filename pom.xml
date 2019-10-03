@@ -110,7 +110,7 @@
 								<configuration>
 									<autocommit>true</autocommit>
 									<srcFiles>
-										<srcFile>ddl/your-schema.sql</srcFile>
+										<srcFile>ddl/drop-${microservice}-db.ddl</srcFile>
 									</srcFiles>
 									<onError>continue</onError>
 								</configuration>
