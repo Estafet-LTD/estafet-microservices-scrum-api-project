@@ -37,7 +37,7 @@ node("maven") {
 	}
 
 	stage("execute build") {
-		openshiftBuild namespace: project, buildConfig: microservice, showBuildLogs: "true",  waitTime: "300000"
+		openshiftBuild namespace: project, buildConfig: microservice, waitTime: "300000"
 		openshiftVerifyBuild namespace: project, buildConfig: microservice, waitTime: "300000" 
 	}
 
@@ -46,7 +46,7 @@ node("maven") {
 	}
 
 	stage("execute deployment") {
-		openshiftDeploy namespace: project, depCfg: microservice, showBuildLogs: "true",  waitTime: "3000000"
+		openshiftDeploy namespace: project, depCfg: microservice,  waitTime: "3000000"
 		openshiftVerifyDeployment namespace: project, depCfg: microservice, replicaCount:"1", verifyReplicaCount: "true", waitTime: "300000" 
 	}
 
