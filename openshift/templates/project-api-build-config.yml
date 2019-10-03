@@ -1,0 +1,58 @@
+apiVersion: v1
+kind: Template
+metadata:
+  creationTimestamp: null
+  name: project-api-build-config
+parameters:
+- description: Defines the namespace within which these objects are deployed
+  name: NAMESPACE
+  required: true
+- description: Defines the location of the estafet github (change this if you have forked and want to use another github)
+  name: GITHUB
+  required: true
+- description: Defines name of the microservice
+  name: MICROSERVICE
+  value: project-api
+  required: true
+- description: Defines the git repository uri within which the microservice resides
+  name: MICROSERVICE_REPO_URI
+  value: estafet-microservices-scrum-api-project
+  required: true
+- description: Git branch/tag reference
+  name: SOURCE_REPOSITORY_REF
+  value: master
+  required: false    
+objects:
+  apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    annotations:
+      openshift.io/generated-by: Estafet
+    creationTimestamp: null
+    labels:
+      app: ${MICROSERVICE}
+    name: ${MICROSERVICE}
+    namespace: microservices-scrum
+  spec:
+    failedBuildsHistoryLimit: 5
+    nodeSelector: null
+    output:
+      to:
+        kind: ImageStreamTag
+        name: "${MICROSERVICE}:latest"
+    postCommit: {}
+    resources: {}
+    runPolicy: Serial
+    source:
+      git:
+        ref: ${SOURCE_REPOSITORY_REF}
+        uri: "https://github.com/${GITHUB}/${MICROSERVICE_REPO_URI}"
+      type: Git
+    strategy:
+      sourceStrategy:
+        from:
+          kind: ImageStreamTag
+          name: 'redhat-openjdk18-openshift:1.2'
+          namespace: ${NAMESPACE}
+      type: Source
+    successfulBuildsHistoryLimit: 5

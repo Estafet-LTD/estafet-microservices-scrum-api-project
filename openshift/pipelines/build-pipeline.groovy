@@ -23,7 +23,7 @@ node("maven") {
 	
 	stage("prepare the database") {
 		withMaven(mavenSettingsConfig: 'microservices-scrum') {
-	      sh "mvn clean package -P prepare-db -Dmaven.test.skip=true -Dproject=build"
+	      sh "mvn clean package -P prepare-db -Dmaven.test.skip=true -Dproject=${project}"
 	    } 
 	}
 	
@@ -31,10 +31,23 @@ node("maven") {
 		openshiftDeploy namespace: project, depCfg: "broker-amq", showBuildLogs: "true",  waitTime: "3000000"
 		openshiftVerifyDeployment namespace: project, depCfg: "broker-amq", replicaCount:"1", verifyReplicaCount: "true", waitTime: "300000"
 	}
+	
+	stage{"create build config"} {
+		sh "oc process -n ${project} -f openshift/templates/${microservice}-build-config.yml -p NAMESPACE=${project} -p GITHUB=${params.GITHUB} | oc create -f -"
+	}
+	
+	stage{"create deployment config"} {
+		sh "oc process -n ${project} -f openshift/templates/${microservice}-config.yml -p NAMESPACE=${project} | oc create -f -"
+	}
 
-	stage("build & deploy container") {
+	stage("build") {
 		openshiftBuild namespace: project, buildConfig: microservice, showBuildLogs: "true",  waitTime: "300000"
-		sh "oc set env dc/${microservice} JBOSS_A_MQ_BROKER_URL=tcp://broker-amq-tcp.${project}.svc:61616 -n ${project}"
+		openshiftVerifyBuild namespace: project, buildConfig: microservice, waitTime: "300000"
+		sleep time:120 
+	}
+
+	stage("deploy") {
+		openshiftDeploy namespace: project, depCfg: microservice, showBuildLogs: "true",  waitTime: "3000000"
 		openshiftVerifyDeployment namespace: project, depCfg: microservice, replicaCount:"1", verifyReplicaCount: "true", waitTime: "300000"
 		sleep time:120 
 	}
