@@ -40,13 +40,13 @@ node("maven") {
 		sh "oc process -n ${project} -f openshift/templates/${microservice}-config.yml -p NAMESPACE=${project} | oc create -f -"
 	}
 
-	stage("build") {
+	stage("execute build") {
 		openshiftBuild namespace: project, buildConfig: microservice, showBuildLogs: "true",  waitTime: "300000"
 		openshiftVerifyBuild namespace: project, buildConfig: microservice, waitTime: "300000"
 		sleep time:120 
 	}
 
-	stage("deploy") {
+	stage("execute deployment") {
 		openshiftDeploy namespace: project, depCfg: microservice, showBuildLogs: "true",  waitTime: "3000000"
 		openshiftVerifyDeployment namespace: project, depCfg: microservice, replicaCount:"1", verifyReplicaCount: "true", waitTime: "300000"
 		sleep time:120 
