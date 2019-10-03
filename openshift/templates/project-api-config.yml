@@ -61,14 +61,6 @@ objects:
       spec:
         containers:
           - env:
-              - name: JAEGER_AGENT_HOST
-                value: "jaeger-agent.${NAMESPACE}.svc"
-              - name: JAEGER_SAMPLER_MANAGER_HOST_PORT
-                value: "jaeger-agent.${NAMESPACE}.svc:5778"
-              - name: JAEGER_SAMPLER_PARAM
-                value: '1'
-              - name: JAEGER_SAMPLER_TYPE
-                value: const
               - name: JBOSS_A_MQ_BROKER_PASSWORD
                 value: amq
               - name: JBOSS_A_MQ_BROKER_URL
