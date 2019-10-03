@@ -23,7 +23,7 @@ node("maven") {
 	
 	stage("prepare the database") {
 		withMaven(mavenSettingsConfig: 'microservices-scrum') {
-	      sh "mvn clean package -P db -Dmaven.test.skip=true -Dproject=build"
+	      sh "mvn clean package -P prepare-db -Dmaven.test.skip=true -Dproject=build"
 	    } 
 	}
 	

@@ -54,7 +54,7 @@
 			</build>
 		</profile>
 		<profile>
-			<id>db</id>
+			<id>prepare-db</id>
 			<build>
 				<plugins>
 					<plugin>
