@@ -28,6 +28,12 @@ node('maven') {
 	stage("checkout") {
 		git branch: "master", url: "https://${username()}:${password()}@github.com/${params.GITHUB}/estafet-microservices-scrum-api-project"
 	}
+
+	stage("prepare the database") {
+		withMaven(mavenSettingsConfig: 'microservices-scrum') {
+	      sh "mvn clean package -P prepare-db -Dmaven.test.skip=true -Dproject=${project}"
+	    } 
+	}
 	
 	stage("create deployment config") {
 		sh "oc process -n ${project} -f openshift/templates/${microservice}-config.yml -p NAMESPACE=${project} -p DOCKER_IMAGE_LABEL=PrepareForTesting | oc apply -f -"

@@ -115,7 +115,7 @@ objects:
             - ${MICROSERVICE}
           from:
             kind: ImageStreamTag
-            name: "${MICROSERVICE}:latest"
+            name: "${MICROSERVICE}:${DOCKER_IMAGE_LABEL}"
             namespace: ${NAMESPACE}
         type: ImageChange
 - apiVersion: v1
