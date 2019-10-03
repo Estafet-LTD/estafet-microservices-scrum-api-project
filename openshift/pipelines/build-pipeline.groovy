@@ -22,15 +22,9 @@ node("maven") {
 	}
 	
 	stage("prepare the database") {
-
-		Class.forName("org.postgresql.Driver")
-		def props = [user: "postgres", password: "welcome1", allowMultiQueries: 'true'] as Properties
-    def url = "jdbc:postgresql://postgresql.${project}.svc:5432/${project}-${microservice}"
-    def driver = "org.postgresql.Driver"
-    def sql = groovy.sql.Sql.newInstance(url, props, driver)
-		def sqlFile = "ddl/drop-project-api-db.ddl"
-    sql.execute new File(sqlFile).text
-    sql.execute "drop table DATABASECHANGELOG"
+		withMaven(mavenSettingsConfig: 'microservices-scrum') {
+	      sh "mvn clean package -P db -Dmaven.test.skip=true -Dproject=build"
+	    } 
 	}
 	
 	stage("reset a-mq to purge topics") {
