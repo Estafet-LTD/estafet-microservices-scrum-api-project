@@ -21,8 +21,28 @@ parameters:
 - description: Git branch/tag reference
   name: SOURCE_REPOSITORY_REF
   value: master
-  required: false    
+  required: false
+- description: Defines docker registry
+  name: DOCKER_REGISTRY
+  value: docker-registry.default.svc:5000
+  required: true      
 objects:
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    creationTimestamp: null
+    labels:
+      app: ${MICROSERVICE}
+    name: ${MICROSERVICE}
+    namespace: ${NAMESPACE}
+  spec:
+    lookupPolicy:
+      local: false
+  status:
+    dockerImageRepository: '${DOCKER_REGISTRY}/${NAMESPACE}/${MICROSERVICE}'
+    tags:
+      - items:
+        tag: latest
 - apiVersion: v1
   kind: BuildConfig
   metadata:
