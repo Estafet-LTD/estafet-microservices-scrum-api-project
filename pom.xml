@@ -84,7 +84,7 @@
 								<configuration>
 									<!-- need another database to create the targeted one -->
 									<url>jdbc:postgresql://postgresql.${project}.svc:5432/postgres</url>
-									<sqlCommand>CREATE DATABASE ${project}-${microservice}</sqlCommand>
+									<sqlCommand>CREATE DATABASE ${project}-${microservice};</sqlCommand>
 									<!-- ignore error when database is not available -->
 									<onError>continue</onError>
 								</configuration>
@@ -96,7 +96,7 @@
 									<goal>execute</goal>
 								</goals>
 								<configuration>
-									<sqlCommand>DROP TABLE DATABASECHANGELOG</sqlCommand>
+									<sqlCommand>DROP TABLE IF EXISTS DATABASECHANGELOG;</sqlCommand>
 								</configuration>
 							</execution>
 							<execution>
