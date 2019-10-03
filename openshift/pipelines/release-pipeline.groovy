@@ -1,14 +1,3 @@
-@NonCPS
-def getImage(json, microservice) {
-	def item = new groovy.json.JsonSlurper().parseText(json).items.find{it.metadata.name == microservice}
-	return item.status.dockerImageRepository
-}
-
-@NonCPS
-boolean deploymentConfigurationExists(json, microservice) {
-	return new groovy.json.JsonSlurper().parseText(json).items.find{it.metadata.name == microservice} != null
-}
-
 def username() {
     withCredentials([usernamePassword(credentialsId: 'microservices-scrum', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
         return USERNAME
@@ -40,22 +29,15 @@ node('maven') {
 		git branch: "master", url: "https://${username()}:${password()}@github.com/${params.GITHUB}/estafet-microservices-scrum-api-project"
 	}
 	
-	stage("deploy container") {
-		sh "oc get is -o json -n ${project} > is.json"
-		def is = readFile('is.json')
-		def image = getImage (is, microservice)
-		sh "oc get dc -o json -n test > dc.json"
-		def dc = readFile ('dc.json')
-		if (deploymentConfigurationExists (dc, microservice)) {
-			openshiftDeploy namespace: project, depCfg: microservice
-		} else {
-			def template = readFile ('openshift/test-deployment-config.json').replaceAll(/\$\{image\}/, image).replaceAll(/\$\{microservice\}/, microservice)
-			def serviceTemplate = readFile ('openshift/test-service-config.yaml').replaceAll(/\$\{microservice\}/, microservice)
-			openshiftCreateResource namespace:project, jsonyaml:template
-			openshiftCreateResource namespace:project, jsonyaml:serviceTemplate
-		}
-		openshiftVerifyDeployment namespace: project, depCfg: microservice, replicaCount:"1", verifyReplicaCount: "true", waitTime: "600000"
-	}	
+	stage("create deployment config") {
+		sh "oc process -n ${project} -f openshift/templates/${microservice}-config.yml -p NAMESPACE=${project} -p DOCKER_IMAGE_LABEL=PrepareForTesting | oc apply -f -"
+		sh "oc set env dc/${microservice} JAEGER_AGENT_HOST=jaeger-agent.${project}.svc JAEGER_SAMPLER_MANAGER_HOST_PORT=jaeger-agent.${project}.svc:5778 JAEGER_SAMPLER_PARAM=1 JAEGER_SAMPLER_TYPE=const -n ${project}"
+	}
+	
+	stage("execute deployment") {
+		openshiftDeploy namespace: project, depCfg: microservice,  waitTime: "3000000"
+		openshiftVerifyDeployment namespace: project, depCfg: microservice, replicaCount:"1", verifyReplicaCount: "true", waitTime: "300000" 
+	}
 	
 	stage("trigger acceptance tests") {
 		sh "oc start-build qa-pipeline -n cicd"	
