@@ -54,8 +54,6 @@ objects:
       type: Rolling
     template:
       metadata:
-        annotations:
-          openshift.io/generated-by: Estafet
         creationTimestamp: null
         labels:
           app: ${MICROSERVICE}
@@ -118,12 +116,19 @@ objects:
         securityContext: {}
         terminationGracePeriodSeconds: 30
     test: false
-    triggers: {}
+    triggers:
+      - imageChangeParams:
+          automatic: true
+          containerNames:
+            - ${MICROSERVICE}
+          from:
+            kind: ImageStreamTag
+            name: "${MICROSERVICE}:latest"
+            namespace: ${NAMESPACE}
+        type: ImageChange
 - apiVersion: v1
   kind: Service
   metadata:
-    annotations:
-      openshift.io/generated-by: Estafet
     creationTimestamp: null
     labels:
       app: ${MICROSERVICE}

@@ -35,21 +35,19 @@ node("maven") {
 	stage("create build config") {
 			sh "oc process -n ${project} -f openshift/templates/${microservice}-build-config.yml -p NAMESPACE=${project} -p GITHUB=${params.GITHUB} | oc create -f -"
 	}
-	
+
+	stage("execute build") {
+		openshiftBuild namespace: project, buildConfig: microservice, showBuildLogs: "true",  waitTime: "300000"
+		openshiftVerifyBuild namespace: project, buildConfig: microservice, waitTime: "300000" 
+	}
+
 	stage("create deployment config") {
 		sh "oc process -n ${project} -f openshift/templates/${microservice}-config.yml -p NAMESPACE=${project} | oc create -f -"
 	}
 
-	stage("execute build") {
-		openshiftBuild namespace: project, buildConfig: microservice, showBuildLogs: "true",  waitTime: "300000"
-		openshiftVerifyBuild namespace: project, buildConfig: microservice, waitTime: "300000"
-		sleep time:120 
-	}
-
 	stage("execute deployment") {
 		openshiftDeploy namespace: project, depCfg: microservice, showBuildLogs: "true",  waitTime: "3000000"
-		openshiftVerifyDeployment namespace: project, depCfg: microservice, replicaCount:"1", verifyReplicaCount: "true", waitTime: "300000"
-		sleep time:120 
+		openshiftVerifyDeployment namespace: project, depCfg: microservice, replicaCount:"1", verifyReplicaCount: "true", waitTime: "300000" 
 	}
 
 	stage("execute the container tests") {
