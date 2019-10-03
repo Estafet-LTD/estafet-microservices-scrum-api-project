@@ -33,7 +33,7 @@ node("maven") {
 	}
 	
 	stage("create build config") {
-			sh "oc process -n ${project} -f openshift/templates/${microservice}-build-config.yml -p NAMESPACE=${project} -p GITHUB=${params.GITHUB} | oc create -f -"
+			sh "oc process -n ${project} -f openshift/templates/${microservice}-build-config.yml -p NAMESPACE=${project} -p GITHUB=${params.GITHUB} | oc apply -f -"
 	}
 
 	stage("execute build") {
@@ -42,7 +42,7 @@ node("maven") {
 	}
 
 	stage("create deployment config") {
-		sh "oc process -n ${project} -f openshift/templates/${microservice}-config.yml -p NAMESPACE=${project} | oc create -f -"
+		sh "oc process -n ${project} -f openshift/templates/${microservice}-config.yml -p NAMESPACE=${project} | oc apply -f -"
 	}
 
 	stage("execute deployment") {
