@@ -83,7 +83,7 @@
 								</goals>
 								<configuration>
 									<!-- need another database to create the targeted one -->
-									<url>jdbc:postgresql://postgresql.${project}.svc:5432/sampledb</url>
+									<url>jdbc:postgresql://postgresql.${project}.svc:5432/postgres</url>
 									<sqlCommand>CREATE DATABASE ${project}-${microservice}</sqlCommand>
 									<!-- ignore error when database is not available -->
 									<onError>continue</onError>
