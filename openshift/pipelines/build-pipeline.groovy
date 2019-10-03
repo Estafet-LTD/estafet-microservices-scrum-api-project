@@ -33,8 +33,8 @@ node("maven") {
 	}
 	
 	stage{"create build config"} {
+			println "Preabmle...."
 			println "oc process -n ${project} -f openshift/templates/${microservice}-build-config.yml -p NAMESPACE=${project} -p GITHUB=${params.GITHUB} | oc create -f -"
-		sh "oc process -n ${project} -f openshift/templates/${microservice}-build-config.yml -p NAMESPACE=${project} -p GITHUB=${params.GITHUB} | oc create -f -"
 	}
 	
 	stage{"create deployment config"} {
