@@ -26,8 +26,6 @@ objects:
   apiVersion: v1
   kind: BuildConfig
   metadata:
-    annotations:
-      openshift.io/generated-by: Estafet
     creationTimestamp: null
     labels:
       app: ${MICROSERVICE}
