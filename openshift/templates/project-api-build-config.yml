@@ -23,7 +23,7 @@ parameters:
   value: master
   required: false    
 objects:
-  apiVersion: v1
+- apiVersion: v1
   kind: BuildConfig
   metadata:
     creationTimestamp: null
