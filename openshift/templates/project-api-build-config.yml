@@ -30,7 +30,7 @@ objects:
     labels:
       app: ${MICROSERVICE}
     name: ${MICROSERVICE}
-    namespace: microservices-scrum
+    namespace: ${NAMESPACE}
   spec:
     failedBuildsHistoryLimit: 5
     nodeSelector: null
