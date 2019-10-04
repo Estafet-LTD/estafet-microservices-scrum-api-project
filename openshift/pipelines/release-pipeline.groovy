@@ -45,10 +45,6 @@ node('maven') {
 		openshiftVerifyDeployment namespace: project, depCfg: microservice, replicaCount:"1", verifyReplicaCount: "true", waitTime: "300000" 
 	}
 	
-	stage("trigger acceptance tests") {
-		sh "oc start-build qa-pipeline -n cicd"	
-	}
-	
 	stage("increment version") {
 		def pom = readFile('pom.xml');
 		def matcher = new XmlSlurper().parseText(pom).version =~ /(\d+\.\d+\.)(\d+)(\-SNAPSHOT)/
@@ -68,10 +64,13 @@ node('maven') {
 		} 
 	}	
 
-	stage("promote to production") {
-		openshiftTag namespace: project, srcStream: microservice, srcTag: 'PrepareForTesting', destinationNamespace: 'prod', destinationStream: microservice, destinationTag: releaseVersion
-		openshiftTag namespace: project, srcStream: microservice, srcTag: 'PrepareForTesting', destinationNamespace: 'prod', destinationStream: microservice, destinationTag: 'latest'
+	stage("promote image to staging") {
+		openshiftTag namespace: project, srcStream: microservice, srcTag: 'PrepareForTesting', destinationNamespace: 'staging', destinationStream: microservice, destinationTag: releaseVersion
 	}	
+	
+	stage("trigger acceptance tests") {
+		sh "oc start-build qa-pipeline -n cicd"	
+	}
 	
 }
 
