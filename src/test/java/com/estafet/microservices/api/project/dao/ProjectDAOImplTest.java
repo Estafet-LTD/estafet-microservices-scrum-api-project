@@ -33,7 +33,7 @@ public class ProjectDAOImplTest {
 
 	@Test
 	public void testGetProject() {
-		Project project = Project.getAPI();
+		Project project = Project.getAPI("1.0.0");
 		when(entityManager.find(Project.class, Integer.valueOf(1))).thenReturn(project);
 		assertEquals(project, projectDAO.getProject(1));
 		verify(entityManager, times(1)).find(Project.class, Integer.valueOf(1));
@@ -49,7 +49,7 @@ public class ProjectDAOImplTest {
 
 	@Test
 	public void testDeleteProject() {
-		Project project = Project.getAPI();
+		Project project = Project.getAPI("1.0.0");
 		when(entityManager.find(Project.class, Integer.valueOf(1))).thenReturn(project);
 		projectDAO.deleteProject(1);
 		verify(entityManager, times(1)).remove(project);
@@ -57,14 +57,14 @@ public class ProjectDAOImplTest {
 
 	@Test
 	public void testUpdateProject() {
-		Project project = Project.getAPI();
+		Project project = Project.getAPI("1.0.0");
 		projectDAO.updateProject(project);
 		verify(entityManager, times(1)).merge(project);
 	}
 
 	@Test
 	public void testCreateProject() {
-		Project project = Project.getAPI();
+		Project project = Project.getAPI("1.0.0");
 		projectDAO.createProject(project);
 		verify(entityManager, times(1)).persist(project);
 		verify(newProjectProducer, times(1)).sendMessage(project);

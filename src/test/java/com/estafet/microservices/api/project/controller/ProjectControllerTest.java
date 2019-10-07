@@ -46,7 +46,7 @@ public class ProjectControllerTest {
 
 	@Test
 	public void testGetProject() {
-		when(projectService.getProject(1)).thenReturn(Project.getAPI());
+		when(projectService.getProject(1)).thenReturn(Project.getAPI("1.0.0"));
 		assertEquals(controller.getProject(1).getId().intValue(), 1);
 		assertEquals(controller.projectAPI().getTitle(), "my project");
 	}
@@ -62,7 +62,7 @@ public class ProjectControllerTest {
 
 	@Test
 	public void testCreateProject() {
-		Project project = Project.getAPI();
+		Project project = Project.getAPI("1.0.0");
 		when(projectService.createProject(project)).thenReturn(project);
 		ResponseEntity result = controller.createProject(project);
 		verify(projectService, times(1)).createProject(project);

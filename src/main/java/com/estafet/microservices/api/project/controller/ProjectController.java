@@ -3,6 +3,7 @@ package com.estafet.microservices.api.project.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,6 +22,9 @@ import io.opentracing.Tracer;
 @RestController
 public class ProjectController {
 
+	@Value("${app.version}")
+	private String appVersion;
+	
 	@Autowired
 	private Tracer tracer;
 	
@@ -30,7 +34,7 @@ public class ProjectController {
 	@GetMapping("/api")
 	public Project projectAPI() {
 		tracer.activeSpan().setTag("api", true);
-		return Project.getAPI();
+		return Project.getAPI(appVersion);
 	}
 	
 	@GetMapping("/project/{id}")

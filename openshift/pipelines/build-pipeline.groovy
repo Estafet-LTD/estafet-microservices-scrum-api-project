@@ -1,8 +1,14 @@
+@NonCPS
+def getVersion(pom) {
+	def matcher = new XmlSlurper().parseText(pom).version =~ /(\d+\.\d+\.)(\d+)(\-SNAPSHOT)/
+	return "${matcher[0][1]}${matcher[0][2].toInteger()}-SNAPSHOT"
+}
+
 node("maven") {
 
 	def project = "build"
 	def microservice = "project-api"
-
+	def version
 	currentBuild.description = "Build a container from the source, then execute unit and container integration tests before promoting the container as a release candidate for acceptance testing."
 
 	properties([
@@ -32,8 +38,14 @@ node("maven") {
 		openshiftVerifyDeployment namespace: project, depCfg: "broker-amq", replicaCount:"1", verifyReplicaCount: "true", waitTime: "300000"
 	}
 	
+	stage("reset the promoted image stream") {
+		def pom = readFile('pom.xml')
+		version = getVersion(pom)
+		sh "oc tag -d ${microservice}:${version} -n cicd || true"
+	}	
+	
 	stage("create build config") {
-			sh "oc process -n ${project} -f openshift/templates/${microservice}-build-config.yml -p NAMESPACE=${project} -p GITHUB=${params.GITHUB} | oc apply -f -"
+			sh "oc process -n ${project} -f openshift/templates/${microservice}-build-config.yml -p NAMESPACE=${project} -p GITHUB=${params.GITHUB} -p DOCKER_IMAGE_LABEL=${version} | oc apply -f -"
 	}
 
 	stage("execute build") {
@@ -42,7 +54,7 @@ node("maven") {
 	}
 
 	stage("create deployment config") {
-		sh "oc process -n ${project} -f openshift/templates/${microservice}-config.yml -p NAMESPACE=${project} | oc apply -f -"
+		sh "oc process -n ${project} -f openshift/templates/${microservice}-config.yml -p NAMESPACE=${project} -p DOCKER_NAMESPACE=${project} -p DOCKER_IMAGE_LABEL=${version} | oc apply -f -"
 	}
 
 	stage("execute deployment") {
@@ -76,8 +88,8 @@ node("maven") {
 		} 
 	}	
 	
-	stage("promote to test") {
-		openshiftTag namespace: project, srcStream: microservice, srcTag: 'latest', destinationNamespace: 'test', destinationStream: microservice, destinationTag: 'PrepareForTesting'
+	stage("promote the image") {
+		openshiftTag namespace: project, srcStream: microservice, srcTag: version, destinationNamespace: 'cicd', destinationStream: microservice, destinationTag: version
 	}
 
 }

@@ -1,3 +1,13 @@
+@NonCPS
+def getVersions(json) {
+	def tags = new groovy.json.JsonSlurper().parseText(json).status.tags
+	def versions = []
+	for (int i = 0; i < tags.size(); i++) {
+		versions << tags[i]['tag']
+	}
+	return versions
+}
+
 def username() {
     withCredentials([usernamePassword(credentialsId: 'microservices-scrum', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
         return USERNAME
@@ -10,14 +20,28 @@ def password() {
     }
 }
 
-def project = "test"
-def microservice = "project-api"
+def recentVersion(versions) {
+	def size = versions.size()
+	return versions[size-1]
+}
 
-def developmentVersion
-def releaseVersion
-def releaseTag
+def getLatestVersion(microservice) {
+	sh "oc get is ${microservice} -o json -n cicd > image.json"
+	def image = readFile('image.json')
+	def versions = getVersions(image)
+	if (versions.size() == 0) {
+		throw new RuntimeException("There are no images for ${microservice}")
+	}
+	return recentVersion(versions)
+}
 
 node('maven') {
+
+	def project = "test"
+	def microservice = "project-api"
+
+	def developmentVersion
+	def releaseVersion
 
 	properties([
 	  parameters([
@@ -29,28 +53,28 @@ node('maven') {
 		git branch: "master", url: "https://${username()}:${password()}@github.com/${params.GITHUB}/estafet-microservices-scrum-api-project"
 	}
 
+	stage ("verify build image") {
+		String version = getLatestVersion microservice
+		println "latest version is $version"
+		def pom = readFile('pom.xml')
+		def matcher = new XmlSlurper().parseText(pom).version =~ /(\d+\.\d+\.)(\d+)(\-SNAPSHOT)/
+		String pomVersion = "${matcher[0][1]}${matcher[0][2].toInteger()}-SNAPSHOT"
+		if (!version.equals(pomVersion)) {
+			throw new RuntimeException("Source version ${pomVersion} does not match image version ${version}")
+		}
+	}
+	
 	stage("prepare the database") {
 		withMaven(mavenSettingsConfig: 'microservices-scrum') {
 	      sh "mvn clean package -P prepare-db -Dmaven.test.skip=true -Dproject=${project}"
 	    } 
-	}
-	
-	stage("create deployment config") {
-		sh "oc process -n ${project} -f openshift/templates/${microservice}-config.yml -p NAMESPACE=${project} -p DOCKER_IMAGE_LABEL=PrepareForTesting | oc apply -f -"
-		sh "oc set env dc/${microservice} JAEGER_AGENT_HOST=jaeger-agent.${project}.svc JAEGER_SAMPLER_MANAGER_HOST_PORT=jaeger-agent.${project}.svc:5778 JAEGER_SAMPLER_PARAM=1 JAEGER_SAMPLER_TYPE=const -n ${project}"
-	}
-	
-	stage("execute deployment") {
-		openshiftDeploy namespace: project, depCfg: microservice,  waitTime: "3000000"
-		openshiftVerifyDeployment namespace: project, depCfg: microservice, replicaCount:"1", verifyReplicaCount: "true", waitTime: "300000" 
-	}
+	}	
 	
 	stage("increment version") {
 		def pom = readFile('pom.xml');
 		def matcher = new XmlSlurper().parseText(pom).version =~ /(\d+\.\d+\.)(\d+)(\-SNAPSHOT)/
 		developmentVersion = "${matcher[0][1]}${matcher[0][2].toInteger()+1}-SNAPSHOT"
 		releaseVersion = "${matcher[0][1]}${matcher[0][2]}"
-		releaseTag = "v${releaseVersion}"
 	}
 	
 	stage("perform release") {
@@ -59,18 +83,33 @@ node('maven') {
         withMaven(mavenSettingsConfig: 'microservices-scrum') {
 			sh "mvn release:clean release:prepare release:perform -DreleaseVersion=${releaseVersion} -DdevelopmentVersion=${developmentVersion} -DpushChanges=false -DlocalCheckout=true -DpreparationGoals=initialize -B"
 			sh "git push origin master"
-			sh "git tag ${releaseTag}"
-			sh "git push origin ${releaseTag}"
+			sh "git tag ${releaseVersion}"
+			sh "git push origin ${releaseVersion}"
 		} 
 	}	
 
-	stage("promote image to staging") {
-		openshiftTag namespace: project, srcStream: microservice, srcTag: 'PrepareForTesting', destinationNamespace: 'staging', destinationStream: microservice, destinationTag: releaseVersion
-	}	
-	
-	stage("trigger acceptance tests") {
-		sh "oc start-build qa-pipeline -n cicd"	
+	stage("create build config") {
+			sh "oc process -n ${project} -f openshift/templates/${microservice}-build-config.yml -p NAMESPACE=${project} -p GITHUB=${params.GITHUB} -p SOURCE_REPOSITORY_REF=${releaseVersion} -p DOCKER_IMAGE_LABEL=${releaseVersion} | oc apply -f -"
+	}
+
+	stage("execute build") {
+		openshiftBuild namespace: project, buildConfig: microservice, waitTime: "300000"
+		openshiftVerifyBuild namespace: project, buildConfig: microservice, waitTime: "300000" 
+	}
+
+	stage("create deployment config") {
+		sh "oc process -n ${project} -f openshift/templates/${microservice}-config.yml -p NAMESPACE=${project} -p DOCKER_NAMESPACE=${project} -p DOCKER_IMAGE_LABEL=${releaseVersion} | oc apply -f -"
+		sh "oc set env dc/${microservice} JAEGER_AGENT_HOST=jaeger-agent.${project}.svc JAEGER_SAMPLER_MANAGER_HOST_PORT=jaeger-agent.${project}.svc:5778 JAEGER_SAMPLER_PARAM=1 JAEGER_SAMPLER_TYPE=const -n ${project}"
 	}
 	
+	stage("execute deployment") {
+		openshiftDeploy namespace: project, depCfg: microservice,  waitTime: "3000000"
+		openshiftVerifyDeployment namespace: project, depCfg: microservice, replicaCount:"1", verifyReplicaCount: "true", waitTime: "300000" 
+	}
+
+	stage("promote image to staging") {
+		openshiftTag namespace: project, srcStream: microservice, srcTag: releaseVersion, destinationNamespace: 'staging', destinationStream: microservice, destinationTag: releaseVersion
+	}	
+
 }
 

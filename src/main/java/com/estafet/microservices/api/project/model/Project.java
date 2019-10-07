@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,12 +31,19 @@ public class Project {
 	@Column(name = "SPRINT_LENGTH_DAYS", nullable = false)
 	private Integer sprintLengthDays;
 
+	@Transient
+	private String version;
+
 	public Integer getId() {
 		return id;
 	}
 
 	public String getTitle() {
 		return title;
+	}
+
+	public String getVersion() {
+		return version;
 	}
 
 	public Project setTitle(String title) {
@@ -58,7 +66,7 @@ public class Project {
 	public void setSprintLengthDays(Integer sprintLengthDays) {
 		this.sprintLengthDays = sprintLengthDays;
 	}
-	
+
 	public String toJSON() {
 		try {
 			return new ObjectMapper().writeValueAsString(this);
@@ -67,10 +75,11 @@ public class Project {
 		}
 	}
 
-	public static Project getAPI() {
+	public static Project getAPI(String version) {
 		Project project = new Project();
 		project.id = 1;
 		project.title = "my project";
+		project.version = API.getVersion(version);
 		return project;
 	}
 

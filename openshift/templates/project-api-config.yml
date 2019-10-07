@@ -19,13 +19,15 @@ parameters:
   name: MIN_MEMORY
   value: 50Mi
   required: true
+- description: Defines the namespace for the image stream
+  name: DOCKER_NAMESPACE
+  required: true  
 - description: Defines docker registry
   name: DOCKER_REGISTRY
   value: docker-registry.default.svc:5000
   required: true      
 - description: Defines docker registry
   name: DOCKER_IMAGE_LABEL
-  value: latest
   required: true  
 objects:
 - apiVersion: v1
@@ -34,6 +36,7 @@ objects:
     creationTimestamp: null
     labels:
       app: ${MICROSERVICE}
+      product: microservices-scrum
     name: ${MICROSERVICE}
     namespace: ${NAMESPACE}
   spec:
@@ -64,7 +67,7 @@ objects:
               - name: JBOSS_A_MQ_BROKER_PASSWORD
                 value: amq
               - name: JBOSS_A_MQ_BROKER_URL
-                value: "tcp://broker-amq-tcp.${NAMESPACE}.svc:61616"
+                value: 'tcp://broker-amq-tcp.${NAMESPACE}.svc:61616'
               - name: JBOSS_A_MQ_BROKER_USER
                 value: amq
               - name: PROJECT_API_DB_PASSWORD
@@ -73,7 +76,7 @@ objects:
                 value: postgres
               - name: PROJECT_API_JDBC_URL
                 value: jdbc:postgresql://postgresql.${NAMESPACE}.svc:5432/${NAMESPACE}-${MICROSERVICE}
-            image: ${DOCKER_REGISTRY}/${NAMESPACE}/${MICROSERVICE}:${DOCKER_IMAGE_LABEL}
+            image: ${DOCKER_REGISTRY}/${DOCKER_NAMESPACE}/${MICROSERVICE}:${DOCKER_IMAGE_LABEL}
             imagePullPolicy: Always
             name: ${MICROSERVICE}
             ports:
@@ -116,7 +119,7 @@ objects:
           from:
             kind: ImageStreamTag
             name: "${MICROSERVICE}:${DOCKER_IMAGE_LABEL}"
-            namespace: ${NAMESPACE}
+            namespace: ${DOCKER_NAMESPACE}
         type: ImageChange
 - apiVersion: v1
   kind: Service
