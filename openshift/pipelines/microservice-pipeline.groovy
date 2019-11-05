@@ -11,8 +11,8 @@ node("maven") {
 	def version
 
 	stage("checkout") {
+		git branch: "master", url: "https://github.com/${params.GITHUB}/estafet-microservices-scrum-basic-ui"
 		version = sh(returnStdout: true, script: "git tag --sort version:refname | tail -1").trim()
-		git branch: version, url: "https://github.com/${params.GITHUB}/estafet-microservices-scrum-api-project"
 	}
 	
 	stage("prepare the database") {
