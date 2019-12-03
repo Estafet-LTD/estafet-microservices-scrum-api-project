@@ -89,7 +89,7 @@ node("maven") {
 	}	
 	
 	stage("promote the image") {
-		openshiftTag namespace: project, srcStream: microservice, srcTag: version, destinationNamespace: '${params.PRODUCT}-cicd', destinationStream: microservice, destinationTag: version
+		openshiftTag namespace: project, srcStream: microservice, srcTag: version, destinationNamespace: "${params.PRODUCT}-cicd", destinationStream: microservice, destinationTag: version
 	}
 
 }
