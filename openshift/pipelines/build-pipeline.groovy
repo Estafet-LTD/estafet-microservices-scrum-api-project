@@ -41,7 +41,7 @@ node("maven") {
 	stage("reset the promoted image stream") {
 		def pom = readFile('pom.xml')
 		version = getVersion(pom)
-		sh "oc tag -d ${microservice}:${version} -n cicd || true"
+		sh "oc tag -d ${microservice}:${version} -n ${params.PRODUCT}-cicd || true"
 	}	
 	
 	stage("create build config") {
