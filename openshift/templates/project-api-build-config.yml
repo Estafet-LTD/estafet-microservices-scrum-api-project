@@ -80,6 +80,9 @@ objects:
       type: Git
     strategy:
       sourceStrategy:
+        env:
+        - name: MAVEN_MIRROR_URL
+          value: http://nexus.nexus.svc:8081/nexus/content/groups/public        
         from:
           kind: ImageStreamTag
           name: 'redhat-openjdk18-openshift:1.2'
