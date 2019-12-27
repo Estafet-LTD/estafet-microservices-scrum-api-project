@@ -15,6 +15,15 @@
 		<entity.package>com.estafet.microservices.api.project.model</entity.package>
 	</properties>
 
+	<dependencies>
+		<dependency>
+			<groupId>com.estafet.microservices.scrum</groupId>
+			<artifactId>microservices-scrum-commons-lib</artifactId>
+			<version>1.0.6</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
 	<scm>
 		<connection>scm:git:https://github.com/Estafet-LTD/estafet-microservices-scrum-api-project.git</connection>
 		<developerConnection>scm:git:https://github.com/Estafet-LTD/estafet-microservices-scrum-api-project.git</developerConnection>

@@ -17,7 +17,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 
 import com.estafet.microservices.api.project.model.Project;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.estafet.microservices.scrum.lib.commons.properties.PropertyUtils;
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 
@@ -29,12 +29,12 @@ import io.restassured.http.ContentType;
 @TestExecutionListeners({ DependencyInjectionTestExecutionListener.class, DbUnitTestExecutionListener.class })
 public class ITProjectTest {
 
-	NewProjectTopic topic;
+	NewProjectTopicConsumer topic;
 
 	@Before
 	public void before() throws Exception {
-		RestAssured.baseURI = System.getenv("PROJECT_API_SERVICE_URI");
-		topic = new NewProjectTopic();
+		RestAssured.baseURI = PropertyUtils.instance().getProperty("PROJECT_API_SERVICE_URI");
+		topic = new NewProjectTopicConsumer();
 	}
 
 	@After
@@ -87,7 +87,7 @@ public class ITProjectTest {
 			.body("noSprints", is(5))
 			.body("sprintLengthDays", is(5));
 		
-		Project project = new ObjectMapper().readValue(topic.consumeMessage(), Project.class);
+		Project project = topic.consume();
 		assertThat(project.getId(), is(id));
 		assertThat(project.getTitle(), is("My Project #1"));
 		assertThat(project.getNoSprints(), is(5));
