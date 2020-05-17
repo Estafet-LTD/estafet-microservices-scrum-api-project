@@ -1,7 +1,7 @@
 config_map:
   - name: JBOSS_A_MQ_BROKER_URL
     value: tcp://{{ microservice.name }}-amq-tcp.{{ project }}.svc:61616
-  - name: CONSOLE_ENVIRONMENT_API_JDBC_URL
+  - name: PROJECT_API_JDBC_URL
     value: jdbc:postgresql://postgresql.{{ product }}-database.svc:5432/{{ project }}-{{ microservice.name }}
   - name: JAEGER_SERVICE_NAME
     value: blue-{{ microservice.name }}
