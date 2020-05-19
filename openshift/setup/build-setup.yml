@@ -1,6 +1,13 @@
 setup:
+
   - name: create-postgres-db
     app: project-api
     repo: estafet-microservices-scrum-api-project
     db_project: ms-scrum-database
     reset_db: true
+
+  - name: amq-setup
+    application_name: project-api
+    amq_user: amq
+    amq_password: amq
+
